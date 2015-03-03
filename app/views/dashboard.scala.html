@@ -1,0 +1,13 @@
+@(message: String, tmpForm: Form[controllers.Dashboard.User])
+
+@import helper._
+
+@main("Dashboard") {
+    @helper.form(action=routes.Dashboard.register) {
+        <fieldset>
+            @inputText(tmpForm("login"))
+
+        </fieldset>
+        <input class="btn btn-primary" type="submit" value="@Messages("user.registration.register")" />
+    }
+}
