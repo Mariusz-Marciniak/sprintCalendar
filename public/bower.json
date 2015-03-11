@@ -1,0 +1,20 @@
+{
+  "name": "sprintCalendar",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Mariusz-Marciniak/sprintCalendar",
+  "authors": [
+    "Mariusz-Marciniak <marcinka2205@o2.pl>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "mm.webcomponents": "*",
+    "webcomponentsjs": "~0.5.5"
+  }
+}

@@ -12,7 +12,6 @@ trait Configuration {
 
 object Configuration {
   implicit val config = InMemoryConfiguration
-
 }
 
 object InMemoryConfiguration extends Configuration {

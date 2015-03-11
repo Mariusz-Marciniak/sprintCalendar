@@ -1,0 +1,9 @@
+@(message: String)
+
+@main(message) {
+
+    <h1>Settings</h1>
+
+    @views.html.components.listbox("users","John","setting-panel")
+    @views.html.components.listbox("holidays","Holidays","setting-panel")
+}

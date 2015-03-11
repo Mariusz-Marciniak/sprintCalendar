@@ -1,0 +1,8 @@
+@(id: String, header: String, styleClass: String)
+
+<link rel="import" href="@routes.Assets.at("bower_components/mm.webcomponents/editable-listbox/editable-listbox.html")" />
+
+<div class="@styleClass">
+    <editable-listbox id="@id" header="@header" rows=["John",{"label":"Gregory","id":"89"}]></editable-listbox>
+</div>
+
