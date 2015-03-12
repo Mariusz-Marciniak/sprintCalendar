@@ -1,6 +1,7 @@
 package controllers
 
 import config.Configuration
+import play.api.Routes
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.{JsValue, Json, JsObject}
@@ -22,6 +23,18 @@ object Settings extends Controller {
       })
   )
 
+  def javascripRoutes = Action {implicit request =>
+    import routes.javascript._
+    Ok(
+      Routes.javascriptRouter("jsRoutes") (
+        Settings.users
+      )
+    ).as("text/javascript")
+  }
+
+  def users = {
+    Ok();
+  }
 
   def mainPage = Action {
     Ok(views.html.settings("Settings"))

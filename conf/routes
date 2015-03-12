@@ -3,13 +3,14 @@
 # ~~~~
 
 # Home page
-GET        /                    controllers.Application.index
+GET         /                    controllers.Application.index
 
-GET        /settings            controllers.Settings.mainPage
+GET         /settings            controllers.Settings.mainPage
+GET         /users               controllers.Settings.users
 
-GET        /dashoard            controllers.Dashboard.index
-POST        /register           controllers.Dashboard.register
+GET         /dashoard            controllers.Dashboard.index
+POST        /register            controllers.Dashboard.register
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file        controllers.Assets.at(path="/public", file)
+GET         /assets/*file        controllers.Assets.at(path="/public", file)
