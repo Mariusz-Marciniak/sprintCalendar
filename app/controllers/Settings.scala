@@ -4,12 +4,13 @@ import config.Configuration
 import play.api.Routes
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.libs.json.{JsValue, Json, JsObject}
+import play.api.libs.json.{JsValue, Json, JsArray}
 import play.api.mvc.{Action, Controller}
 import java.util.Date;
 
 
 object Settings extends Controller {
+/*
   val settings: Form[Settings] = Form(
     mapping(
       "users" -> text,
@@ -22,47 +23,44 @@ object Settings extends Controller {
         Some((Json.stringify(s.users), Json.stringify(s.holidays)))
       })
   )
-
-  def javascripRoutes = Action {implicit request =>
-    import routes.javascript._
+*/
+  def javascriptRoutes = Action {implicit request =>
     Ok(
-      Routes.javascriptRouter("jsRoutes") (
-        Settings.users
+      Routes.javascriptRouter("settingsJsRoutes") (
+        routes.javascript.Settings.users
       )
     ).as("text/javascript")
   }
 
-  def users = {
-    Ok();
+  def users = Action { implicit request =>
+    Ok(SettingsData.loadEmployees);
   }
 
-  def mainPage = Action {
+  def mainPage = Action { implicit request =>
     Ok(views.html.settings("Settings"))
   }
 
 
 }
 
-case class Settings(users: JsValue, holidays: JsValue)
+case class SettingsObj(users: JsValue, holidays: JsValue)
 
-class SettingsS(implicit config: Configuration) {
+object SettingsData {
+  import config.Configuration._
+
   val Employees = "EMPLOYEES"
   val Holidays = "HOLIDAYS"
   val Sprints = "SPRINTS"
 
   private val dao = config.dao
 
-  def saveSettings(data: Map[String, JsObject]): Unit = {
+  def saveSettings(data: Map[String, JsArray]): Unit = {
     dao.saveEmployees(data(Employees))
     dao.saveHolidays(data(Holidays))
     dao.saveSprints(data(Sprints))
   }
 
-  def loadSettings: Map[String, JsObject] = Map(
-    Employees -> dao.loadEmployees,
-    Holidays -> dao.loadHolidays,
-    Sprints -> dao.loadSprints
-  )
+  def loadEmployees = dao.loadEmployees
 
   def parseToDate(date: String): Date = config.AppDateFormat.parse(date)
 

@@ -1,9 +1,15 @@
 @(message: String)(implicit request: RequestHeader)
 
 @main(message) {
+    <script src="@routes.Assets.at("javascripts/settings.js")" type="text/javascript"></script>
+    <script src="@routes.Settings.javascriptRoutes" type="text/javascript"></script>
 
     <h1>Settings</h1>
-
-    @views.html.components.listbox("users","John","setting-panel")
+<script>
+ $(document).ready(function() {
+    users(document.getElementById('users'));
+ });
+</script>
+    @views.html.components.listbox("users","Users","setting-panel")
     @views.html.components.listbox("holidays","Holidays","setting-panel")
 }

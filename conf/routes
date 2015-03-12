@@ -6,9 +6,10 @@
 GET         /                    controllers.Application.index
 
 GET         /settings            controllers.Settings.mainPage
+GET         /settingsJsRoutes    controllers.Settings.javascriptRoutes
 GET         /users               controllers.Settings.users
 
-GET         /dashoard            controllers.Dashboard.index
+GET         /dashboard           controllers.Dashboard.index
 POST        /register            controllers.Dashboard.register
 
 

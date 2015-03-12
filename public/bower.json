@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "mm.webcomponents": "*",
-    "webcomponentsjs": "~0.5.5"
+    "webcomponentsjs": "~0.5.5",
+    "jquery": "~2.1.3"
   }
 }
