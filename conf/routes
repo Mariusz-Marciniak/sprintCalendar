@@ -5,10 +5,13 @@
 # Home page
 GET         /                    controllers.Application.index
 
+# Settings page
 GET         /settings            controllers.Settings.mainPage
 GET         /settingsJsRoutes    controllers.Settings.javascriptRoutes
 GET         /users               controllers.Settings.users
+GET         /holidays            controllers.Settings.holidays
 
+# Dashboard page
 GET         /dashboard           controllers.Dashboard.index
 POST        /register            controllers.Dashboard.register
 

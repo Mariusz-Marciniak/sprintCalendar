@@ -6,9 +6,10 @@
 
     <h1>Settings</h1>
 <script>
- $(document).ready(function() {
-    users(document.getElementById('users'));
- });
+     $(document).ready(function() {
+        sc_settings.users(document.getElementById('users'));
+        sc_settings.holidays(document.getElementById('holidays'));
+     });
 </script>
     @views.html.components.listbox("users","Users","setting-panel")
     @views.html.components.listbox("holidays","Holidays","setting-panel")
