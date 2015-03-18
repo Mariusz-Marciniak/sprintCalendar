@@ -1,5 +1,22 @@
-.setting-panel {
-  width: 49%;
-  float: left;
-  margin-right: 1%;
+.border-radius(@radius) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.setting-column {
+  border: 5px solid;
+  border-color: rgba(255, 255, 255, 0);
+}
+
+.full-site-panel {
+  .border-radius(5px);
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-panel {
+  .full-site-panel;
+  margin-top: 10px;
 }

@@ -5,12 +5,21 @@
     <script src="@routes.Settings.javascriptRoutes" type="text/javascript"></script>
 
     <h1>Settings</h1>
-<script>
-     $(document).ready(function() {
-        sc_settings.users(document.getElementById('users'));
-        sc_settings.holidays(document.getElementById('holidays'));
-     });
-</script>
-    @views.html.components.listbox("users","Users","setting-panel")
-    @views.html.components.listbox("holidays","Holidays","setting-panel")
+    <script>
+    $ ( document ).ready ( function ( ) {
+        sc_settings.users ( document.getElementById ( 'users' ) ) ;
+        sc_settings.holidays ( document.getElementById ( 'holidays' ) ) ;
+        sc_settings.sprints( document.getElementById( 'sprints' ))
+    } ) ;
+    </script>
+
+    <div class="full-site-panel" horizontal layout>
+        @views.html.components.listbox("users", "Users", "setting-column")
+        @views.html.components.listbox("holidays", "Holidays", "setting-column")
+        @views.html.components.listbox("sprints", "Sprints", "setting-column")
+    </div>
+
+    <div class="footer-panel">
+        <core-icon-button icon="save"><span>Save</span></core-icon-button>
+    </div>
 }

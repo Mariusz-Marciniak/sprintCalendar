@@ -28,7 +28,8 @@ object Settings extends Controller {
     Ok(
       Routes.javascriptRouter("settingsJsRoutes") (
         routes.javascript.Settings.users,
-        routes.javascript.Settings.holidays
+        routes.javascript.Settings.holidays,
+        routes.javascript.Settings.sprints
       )
     ).as("text/javascript")
   }
@@ -38,6 +39,9 @@ object Settings extends Controller {
   }
   def holidays = Action { implicit request =>
     Ok(SettingsData.loadHolidays);
+  }
+  def sprints = Action { implicit request =>
+    Ok(SettingsData.loadSprints);
   }
 
   def mainPage = Action { implicit request =>
@@ -67,6 +71,8 @@ object SettingsData {
   def loadEmployees = dao.loadEmployees
 
   def loadHolidays = dao.loadHolidays
+
+  def loadSprints = dao.loadSprints
 
   def parseToDate(date: String): Date = config.AppDateFormat.parse(date)
 

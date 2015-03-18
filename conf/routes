@@ -10,6 +10,7 @@ GET         /settings            controllers.Settings.mainPage
 GET         /settingsJsRoutes    controllers.Settings.javascriptRoutes
 GET         /users               controllers.Settings.users
 GET         /holidays            controllers.Settings.holidays
+GET         /sprints             controllers.Settings.sprints
 
 # Dashboard page
 GET         /dashboard           controllers.Dashboard.index
