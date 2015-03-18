@@ -11,6 +11,7 @@ GET         /settingsJsRoutes    controllers.Settings.javascriptRoutes
 GET         /users               controllers.Settings.users
 GET         /holidays            controllers.Settings.holidays
 GET         /sprints             controllers.Settings.sprints
+POST        /saveSettings        controllers.Settings.saveSettings
 
 # Dashboard page
 GET         /dashboard           controllers.Dashboard.index

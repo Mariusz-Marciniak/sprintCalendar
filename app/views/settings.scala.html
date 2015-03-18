@@ -4,22 +4,13 @@
     <script src="@routes.Assets.at("javascripts/settings.js")" type="text/javascript"></script>
     <script src="@routes.Settings.javascriptRoutes" type="text/javascript"></script>
 
-    <h1>Settings</h1>
-    <script>
-    $ ( document ).ready ( function ( ) {
-        sc_settings.users ( document.getElementById ( 'users' ) ) ;
-        sc_settings.holidays ( document.getElementById ( 'holidays' ) ) ;
-        sc_settings.sprints( document.getElementById( 'sprints' ))
-    } ) ;
-    </script>
-
     <div class="full-site-panel" horizontal layout>
-        @views.html.components.listbox("users", "Users", "setting-column")
-        @views.html.components.listbox("holidays", "Holidays", "setting-column")
-        @views.html.components.listbox("sprints", "Sprints", "setting-column")
+        @views.html.components.listbox("users", "Users")
+        @views.html.components.listbox("holidays", "Holidays")
+        @views.html.components.listbox("sprints", "Sprints")
     </div>
 
     <div class="footer-panel">
-        <core-icon-button icon="save"><span>Save</span></core-icon-button>
+        <core-icon-button id="saveBtn" icon="save"><span>Save</span></core-icon-button>
     </div>
 }

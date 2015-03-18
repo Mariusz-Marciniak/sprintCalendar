@@ -5,13 +5,18 @@
 <html>
     <head>
         <title>Agile Calendar - @subTitle</title>
+        <script src="@routes.Assets.at("bower_components/webcomponentsjs/webcomponents.js")"></script>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="import" href="@routes.Assets.at("bower_components/core-icon-button/core-icon-button.html")" />
-        <script src="@routes.Assets.at("bower_components/webcomponentsjs/webcomponents.js")"></script>
         <script src="@routes.Assets.at("bower_components/jquery/dist/jquery.min.js")"></script>
     </head>
     <body>
-        @content
+        <div class="main-container">
+            <h1>@subTitle</h1>
+            <div id="success-bar"></div>
+            <div id="error-bar"></div>
+            @content
+        </div>
     </body>
 </html>

@@ -24,12 +24,15 @@ object Settings extends Controller {
       })
   )
 */
+
+
   def javascriptRoutes = Action {implicit request =>
     Ok(
       Routes.javascriptRouter("settingsJsRoutes") (
         routes.javascript.Settings.users,
         routes.javascript.Settings.holidays,
-        routes.javascript.Settings.sprints
+        routes.javascript.Settings.sprints,
+        routes.javascript.Settings.saveSettings
       )
     ).as("text/javascript")
   }
@@ -45,6 +48,12 @@ object Settings extends Controller {
   }
 
   def mainPage = Action { implicit request =>
+    Ok(views.html.settings("Settings"))
+  }
+
+  def saveSettings = Action { implicit request =>
+    val body = request.body
+    println(body)
     Ok(views.html.settings("Settings"))
   }
 
