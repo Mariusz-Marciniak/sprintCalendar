@@ -12,11 +12,11 @@ $ ->
     sprintSet = $("#sprints").get(0).rows
     $.ajax
       url: settingsJsRoutes.controllers.Settings.saveSettings().url
-      dateType: "json"
+      contentType: "application/json"
       method: "POST"
       successMessage: "Data was successfully saved"
       errorMessage: "Save operation failed"
-      data: {"users":userSet, "holidays":holidaySet, "sprints":sprintSet}
+      data: '{"users":'+JSON.stringify(userSet)+', "holidays":'+JSON.stringify(holidaySet)+', "sprints":'+JSON.stringify(sprintSet)+'}'
       success: dataPosted
       error: onError
 

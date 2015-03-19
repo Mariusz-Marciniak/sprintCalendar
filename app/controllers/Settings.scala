@@ -51,11 +51,12 @@ object Settings extends Controller {
     Ok(views.html.settings("Settings"))
   }
 
-  def saveSettings = Action { implicit request =>
-    val body = request.body
-    println(body)
+  def saveSettings = Action(parse.json) { implicit request =>
+    SettingsData.saveSettings(request.body)
     Ok(views.html.settings("Settings"))
   }
+
+
 
 
 }
@@ -65,17 +66,25 @@ case class SettingsObj(users: JsValue, holidays: JsValue)
 object SettingsData {
   import config.Configuration._
 
-  val Employees = "EMPLOYEES"
-  val Holidays = "HOLIDAYS"
-  val Sprints = "SPRINTS"
+  val Employees = "users"
+  val Holidays = "holidays"
+  val Sprints = "sprints"
 
   private val dao = config.dao
 
-  def saveSettings(data: Map[String, JsArray]): Unit = {
-    dao.saveEmployees(data(Employees))
-    dao.saveHolidays(data(Holidays))
-    dao.saveSprints(data(Sprints))
+  def saveSettings(data: JsValue): Unit = {
+    dao.saveEmployees(convertToJsArray(data \ Employees))
+    dao.saveHolidays(convertToJsArray(data \ Holidays))
+    dao.saveSprints(convertToJsArray(data \ Sprints))
   }
+
+  private def convertToJsArray(value: JsValue): JsArray = {
+    value match {
+      case v: JsArray => v
+      case _ => JsArray(Seq())
+    }
+  }
+
 
   def loadEmployees = dao.loadEmployees
 

@@ -1,7 +1,8 @@
 package dao.memory
 
 import dao.SettingsDao
-import play.api.libs.json.{JsArray, JsString}
+import play.api.libs.json
+import play.api.libs.json.{JsValue, JsArray, JsString}
 
 class InMemorySettingsDao extends SettingsDao {
   private var employees: JsArray = JsArray(Seq(JsString("Ala")))
@@ -15,13 +16,13 @@ class InMemorySettingsDao extends SettingsDao {
   def loadEmployees: JsArray = employees
 
   def saveHolidays(holidays: JsArray): Unit = {
-    this.holidays = holidays;
+    this.holidays = holidays
   }
 
   def loadHolidays: JsArray = holidays
 
   def saveSprints(sprints: JsArray): Unit = {
-    this.sprints = sprints;
+    this.sprints = sprints
   }
 
   def loadSprints: JsArray = sprints
