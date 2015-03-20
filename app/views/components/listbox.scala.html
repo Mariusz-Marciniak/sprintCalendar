@@ -1,12 +1,11 @@
-@(id: String, header: String)
+@(id: String, header: String, validation: String = "")
 
 <link rel="import" href="@routes.Assets.at("bower_components/polymer/polymer.html")" />
 <link rel="import" href="@routes.Assets.at("bower_components/core-icons/core-icons.html")" />
 <link rel="import" href="@routes.Assets.at("bower_components/paper-icon-button/paper-icon-button.html")" />
 <link rel="import" href="@routes.Assets.at("bower_components/font-roboto/roboto.html")" />
 <link rel="import" href="@routes.Assets.at("bower_components/mm.webcomponents/editable-listbox/editable-listbox.html")" />
-
 <div class="box-panel" flex>
-    <editable-listbox id="@id" header="@header" rows=[]></editable-listbox>
+    <editable-listbox id="@id" header="@header" rows=[] validation="@validation"></editable-listbox>
 </div>
 

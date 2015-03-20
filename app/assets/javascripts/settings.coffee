@@ -55,3 +55,20 @@ showMessageBar = (bar, message) ->
       $(@).slideUp()
     ), 5000
   )
+
+root.holiday_editbox =
+  validate : (txt) ->
+    pattern = /^[\w\s]+[,;: \t]+(\d{4}-)*\d{1,2}-\d{1,2}\s*$/g
+    datePattern = /(\d{4}-)*\d{1,2}-\d{1,2}\s*$/g
+    if(pattern.exec(txt))
+      dates = txt.match(datePattern)
+      dateStr = dates[dates.length-1]
+      if(dateStr.length < 6)
+        dateStr = '2012-'+dateStr
+      date = new Date(dateStr)
+      if(isNaN(date.getTime()))
+        "Invalid date"
+      else
+        null
+    else
+      "Please enter holiday name followed by date yyyy-mm-dd or mm-dd (for each year)"

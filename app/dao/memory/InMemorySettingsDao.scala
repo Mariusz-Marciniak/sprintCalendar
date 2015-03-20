@@ -5,7 +5,7 @@ import play.api.libs.json
 import play.api.libs.json.{JsValue, JsArray, JsString}
 
 class InMemorySettingsDao extends SettingsDao {
-  private var employees: JsArray = JsArray(Seq(JsString("Ala")))
+  private var employees: JsArray = JsArray(Seq())
   private var holidays: JsArray = JsArray(Seq())
   private var sprints: JsArray = JsArray(Seq())
 
