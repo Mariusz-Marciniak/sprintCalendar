@@ -58,7 +58,7 @@ showMessageBar = (bar, message) ->
 
 root.holiday_editbox =
   validate : (txt) ->
-    pattern = /^[\w\s]+[,;: \t]+(\d{4}-)*\d{1,2}-\d{1,2}\s*$/g
+    pattern = /^[\w\s]+[,;: \t]+(\d{4}-)*\d{1,2}-\d{1,2}\s*$/
     datePattern = /(\d{4}-)*\d{1,2}-\d{1,2}\s*$/g
     if(pattern.exec(txt))
       dates = txt.match(datePattern)
@@ -72,3 +72,41 @@ root.holiday_editbox =
         null
     else
       "Please enter holiday name followed by date yyyy-mm-dd or mm-dd (for each year)"
+  convert : (txt) ->
+    pattern = /^[\w\s]+\w+/
+    datePattern = /(\d{4}-)*\d{1,2}-\d{1,2}\s*$/g
+    dates = txt.match(datePattern)
+    dateStr = dates[dates.length-1]
+    name = pattern.exec(txt.substring(0,txt.length - dateStr.length))
+    JSON.parse('{"label":"'+txt+'","name":"'+name+'","date":"'+dateStr+'"}')
+
+root.sprint_editbox =
+  validate : (txt) ->
+    pattern = /^[\w\s]+[,;: \t]+\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
+    datePattern = /\d{4}-\d{1,2}-\d{1,2}\s*/g
+    if(pattern.exec(txt))
+      dates = txt.match(datePattern)
+      dateStr = dates[dates.length-2]
+      dateFrom = new Date(dateStr)
+      if(isNaN(dateFrom.getTime()))
+        "Invalid date - start of sprint"
+      else
+        dateStr = dates[dates.length-1]
+        dateTo = new Date(dateStr)
+        if(isNaN(dateTo.getTime()))
+          "Invalid date - end of sprint"
+        else
+          if(dateFrom >= dateTo)
+            "End of sprint should occur after beginning"
+          else
+            null
+    else
+      "Please enter sprint name followed by period yyyy-mm-dd::yyyy-mm-dd"
+  convert : (txt) ->
+    namePattern = /^[\w\s]+\w+/
+    datesPattern = /\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
+    datePattern = /\d{4}-\d{1,2}-\d{1,2}\s*/g
+    datesPart = datesPattern.exec(txt)
+    namePart = namePattern.exec(txt.substring(0,txt.length-datesPart[0].length))
+    dates = datesPart[0].split("::")
+    JSON.parse('{"label":"'+txt+'","name":"'+namePart+'","from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')

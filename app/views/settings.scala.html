@@ -6,8 +6,8 @@
 
     <div class="full-site-panel" horizontal layout>
         @views.html.components.listbox("users", "Users")
-        @views.html.components.listbox("holidays", "Holidays", "holiday_editbox.validate")
-        @views.html.components.listbox("sprints", "Sprints")
+        @views.html.components.listbox("holidays", "Holidays", "holiday_editbox.validate", "holiday_editbox.convert")
+        @views.html.components.listbox("sprints", "Sprints", "sprint_editbox.validate", "sprint_editbox.convert")
     </div>
 
     <div class="footer-panel">
