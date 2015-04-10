@@ -21,8 +21,8 @@ object Dashboard extends Controller {
     Ok("xxx")
   }
 
-  def index = Action {
-    Ok(views.html.dashboard("Dashboard",tmpForm))
+  def mainPage = Action {
+    Ok(views.html.dashboard(tmpForm))
   }
 
 }

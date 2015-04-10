@@ -1,4 +1,4 @@
-@(subTitle: String)(content: Html)
+@(subTitle: String, optionIndex: Int)(content: Html)
 
 <!DOCTYPE html>
 
@@ -6,14 +6,20 @@
     <head>
         <title>Agile Calendar - @subTitle</title>
         <script src="@routes.Assets.at("bower_components/webcomponentsjs/webcomponents.js")"></script>
+        <script src="@routes.Assets.at("bower_components/jquery/dist/jquery.min.js")"></script>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="import" href="@routes.Assets.at("bower_components/core-selector/core-selector.html")">
         <link rel="import" href="@routes.Assets.at("bower_components/core-icon-button/core-icon-button.html")" />
-        <script src="@routes.Assets.at("bower_components/jquery/dist/jquery.min.js")"></script>
     </head>
     <body>
         <div class="main-container">
             <h1>@subTitle</h1>
+            <core-selector class="horizontal-menu" selected="@optionIndex" horizontal layout>
+                <a href="@routes.Dashboard.mainPage()">Dashboard</a>
+                <a href="@routes.Vacations.mainPage()">Vacations</a>
+                <a href="@routes.Settings.mainPage()">Settings</a>
+            </core-selector>
             <div id="success-bar"></div>
             <div id="error-bar"></div>
             @content

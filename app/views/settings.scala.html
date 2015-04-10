@@ -1,6 +1,6 @@
-@(message: String)(implicit request: RequestHeader)
+@()(implicit request: RequestHeader)
 
-@main(message) {
+@main("Settings",2) {
     <script src="@routes.Assets.at("javascripts/settings.js")" type="text/javascript"></script>
     <script src="@routes.Settings.javascriptRoutes" type="text/javascript"></script>
 

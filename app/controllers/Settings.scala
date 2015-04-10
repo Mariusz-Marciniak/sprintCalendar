@@ -1,30 +1,13 @@
 package controllers
 
-import config.Configuration
+import java.util.Date
+
 import play.api.Routes
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.libs.json.{JsValue, Json, JsArray}
-import play.api.mvc.{Action, Controller}
-import java.util.Date;
+import play.api.libs.json.{JsArray, JsValue}
+import play.api.mvc.{Action, Controller};
 
 
 object Settings extends Controller {
-/*
-  val settings: Form[Settings] = Form(
-    mapping(
-      "users" -> text,
-      "holidays" -> text
-    )
-      ((users, holidays) => {
-        Settings(Json.parse(users), Json.parse(holidays))
-      })
-      ((s) => {
-        Some((Json.stringify(s.users), Json.stringify(s.holidays)))
-      })
-  )
-*/
-
 
   def javascriptRoutes = Action {implicit request =>
     Ok(
@@ -48,20 +31,15 @@ object Settings extends Controller {
   }
 
   def mainPage = Action { implicit request =>
-    Ok(views.html.settings("Settings"))
+    Ok(views.html.settings())
   }
 
   def saveSettings = Action(parse.json) { implicit request =>
     SettingsData.saveSettings(request.body)
-    Ok(views.html.settings("Settings"))
+    Ok(views.html.settings())
   }
 
-
-
-
 }
-
-case class SettingsObj(users: JsValue, holidays: JsValue)
 
 object SettingsData {
   import config.Configuration._
