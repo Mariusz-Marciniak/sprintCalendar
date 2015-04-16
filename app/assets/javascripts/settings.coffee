@@ -8,9 +8,9 @@ $ ->
   $("#saveBtn").click ->
     $("#success-bar").hide()
     $("#error-bar").hide()
-    employeesSet = $("#employees").get(0).rows
-    holidaySet = $("#holidays").get(0).rows
-    sprintSet = $("#sprints").get(0).rows
+    employeesSet = $("#employees").prop("rows")
+    holidaySet = $("#holidays").prop("rows")
+    sprintSet = $("#sprints").prop("rows")
     $.ajax
       url: settingsJsRoutes.controllers.Settings.saveSettings().url
       contentType: "application/json"

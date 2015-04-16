@@ -2,8 +2,19 @@
 
 
 @main("Vacations",1) {
+
     <div horizontal layout wrap>
-        @employees.map { case employee => @views.html.components.listbox("vacationsOf"+employee,employee+"'s vacations")
+        @employees.zipWithIndex.map { case (employee, index) =>
+            @if(index > 0 && index % 3 == 0) {
+                </div>
+                <div horizontal layout wrap>
+            }
+            @views.html.components.listbox("vacationsOf"+employee,employee+"'s vacations")
+        }
+        @if(employees.size % 3 != 0) {
+            @for(index <- 0 until (3 - employees.size % 3)) {
+                <div flex></div>
+            }
         }
     </div>
 
