@@ -1,13 +1,14 @@
 root = exports ? this
 
 $ ->
-  sc_settings.users ( $('#users') )
+  sc_settings.employees ( $('#employees') )
   sc_settings.holidays ( $( '#holidays' ) )
-  sc_settings.sprints( $( '#sprints' ))
+  sc_settings.sprints( $( '#sprints' ) )
+
   $("#saveBtn").click ->
     $("#success-bar").hide()
     $("#error-bar").hide()
-    userSet = $("#users").get(0).rows
+    employeesSet = $("#employees").get(0).rows
     holidaySet = $("#holidays").get(0).rows
     sprintSet = $("#sprints").get(0).rows
     $.ajax
@@ -16,15 +17,15 @@ $ ->
       method: "POST"
       successMessage: "Data was successfully saved"
       errorMessage: "Save operation failed"
-      data: '{"users":'+JSON.stringify(userSet)+', "holidays":'+JSON.stringify(holidaySet)+', "sprints":'+JSON.stringify(sprintSet)+'}'
+      data: '{"employees":'+JSON.stringify(employeesSet)+', "holidays":'+JSON.stringify(holidaySet)+', "sprints":'+JSON.stringify(sprintSet)+'}'
       success: dataPosted
       error: onError
 
 
 
 root.sc_settings =
-  users : (comp) ->
-    settingsJsRoutes.controllers.Settings.users().ajax(fillRowsAjaxCall(comp))
+  employees : (comp) ->
+    settingsJsRoutes.controllers.Settings.employees().ajax(fillRowsAjaxCall(comp))
   holidays : (comp) ->
     settingsJsRoutes.controllers.Settings.holidays().ajax(fillRowsAjaxCall(comp))
   sprints : (comp) ->
@@ -55,6 +56,10 @@ showMessageBar = (bar, message) ->
       $(@).slideUp()
     ), 5000
   )
+
+root.employee_editbox =
+  convert : (txt) ->
+    JSON.parse('{"label":"'+txt+'","name":"'+txt+'"}')
 
 root.holiday_editbox =
   validate : (txt) ->

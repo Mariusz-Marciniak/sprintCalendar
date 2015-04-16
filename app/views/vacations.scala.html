@@ -1,4 +1,14 @@
-@()(implicit request: RequestHeader)
+@(employees: Seq[String])(implicit request: RequestHeader)
+
 
 @main("Vacations",1) {
+    <div horizontal layout wrap>
+        @employees.map { case employee => @views.html.components.listbox("vacationsOf"+employee,employee+"'s vacations")
+        }
+    </div>
+
+    <div class="footer-panel">
+        <core-icon-button id="saveBtn" icon="save"><span>Save</span></core-icon-button>
+    </div>
+
 }

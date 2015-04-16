@@ -12,7 +12,7 @@ object Settings extends Controller {
   def javascriptRoutes = Action {implicit request =>
     Ok(
       Routes.javascriptRouter("settingsJsRoutes") (
-        routes.javascript.Settings.users,
+        routes.javascript.Settings.employees,
         routes.javascript.Settings.holidays,
         routes.javascript.Settings.sprints,
         routes.javascript.Settings.saveSettings
@@ -20,7 +20,7 @@ object Settings extends Controller {
     ).as("text/javascript")
   }
 
-  def users = Action { implicit request =>
+  def employees = Action { implicit request =>
     Ok(SettingsData.loadEmployees);
   }
   def holidays = Action { implicit request =>
@@ -44,7 +44,7 @@ object Settings extends Controller {
 object SettingsData {
   import config.Configuration._
 
-  val Employees = "users"
+  val Employees = "employees"
   val Holidays = "holidays"
   val Sprints = "sprints"
 
