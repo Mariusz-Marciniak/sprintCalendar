@@ -7,6 +7,7 @@
         <title>Agile Calendar - @subTitle</title>
         <script src="@routes.Assets.at("bower_components/webcomponentsjs/webcomponents.js")"></script>
         <script src="@routes.Assets.at("bower_components/jquery/dist/jquery.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="import" href="@routes.Assets.at("bower_components/core-selector/core-selector.html")">
@@ -16,9 +17,9 @@
         <div class="main-container">
             <h1>@subTitle</h1>
             <core-selector class="horizontal-menu" selected="@optionIndex" notap horizontal layout>
-                <a href="@routes.Dashboard.mainPage()">Dashboard</a>
-                <a href="@routes.Vacations.mainPage()">Vacations</a>
-                <a href="@routes.Settings.mainPage()">Settings</a>
+                <a href="@routes.Dashboard.mainPage()" onclick="return sc_main.showChangeContextWarning()">Dashboard</a>
+                <a href="@routes.Vacations.mainPage()" onclick="return sc_main.showChangeContextWarning()">Vacations</a>
+                <a href="@routes.Settings.mainPage()" onclick="return sc_main.showChangeContextWarning()">Settings</a>
             </core-selector>
             <div id="success-bar"></div>
             <div id="error-bar"></div>

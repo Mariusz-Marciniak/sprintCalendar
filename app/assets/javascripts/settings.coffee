@@ -30,7 +30,6 @@ root.sc_settings =
     settingsJsRoutes.controllers.Settings.holidays().ajax(fillRowsAjaxCall(comp))
   sprints : (comp) ->
     settingsJsRoutes.controllers.Settings.sprints().ajax(fillRowsAjaxCall(comp))
-  dataChanged: false
 
 fillRowsAjaxCall = (comp) -> {
   invoker: comp
@@ -46,21 +45,15 @@ postAjaxCall = () -> {
   error: onError
 }
 
-dataPosted = (data) -> showMessageBar($("#success-bar"),this.successMessage)
+dataPosted = (data) ->
+  sc_main.showMessageBar($("#success-bar"),this.successMessage)
+  sc_main.dataChanged = false
 
-onError = (jqHXR, error, status) -> showMessageBar($("#error-bar"),this.errorMessage ? jqHXR.responseText)
-
-showMessageBar = (bar, message) ->
-  bar.text(message)
-  bar.slideDown(300, ->
-    setTimeout ( =>
-      $(@).slideUp()
-    ), 5000
-  )
+onError = (jqHXR, error, status) -> sc_main.showMessageBar($("#error-bar"),this.errorMessage ? jqHXR.responseText)
 
 root.employee_editbox =
   convert : (txt) ->
-    sc_settings.dataChanged = true
+    sc_main.dataChanged = true
     JSON.parse('{"label":"'+txt+'","name":"'+txt+'"}')
 
 root.holiday_editbox =
@@ -85,7 +78,7 @@ root.holiday_editbox =
     dates = txt.match(datePattern)
     dateStr = dates[dates.length-1]
     name = pattern.exec(txt.substring(0,txt.length - dateStr.length))
-    sc_settings.dataChanged = true
+    sc_main.dataChanged = true
     JSON.parse('{"label":"'+txt+'","name":"'+name+'","date":"'+dateStr+'"}')
 
 root.sprint_editbox =
@@ -117,5 +110,5 @@ root.sprint_editbox =
     datesPart = datesPattern.exec(txt)
     namePart = namePattern.exec(txt.substring(0,txt.length-datesPart[0].length))
     dates = datesPart[0].split("::")
-    sc_settings.dataChanged = true
+    sc_main.dataChanged = true
     JSON.parse('{"label":"'+txt+'","name":"'+namePart+'","from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
