@@ -4,7 +4,7 @@
     <script src="@routes.Assets.at("javascripts/settings.js")" type="text/javascript"></script>
     <script src="@routes.Settings.javascriptRoutes" type="text/javascript"></script>
 
-    <div horizontal layout>
+    <div horizontal layout wrap>
         @views.html.components.listbox("employees", "Employees", conversion="employee_editbox.convert")
         @views.html.components.listbox("holidays", "Holidays", validation="holiday_editbox.validate", conversion="holiday_editbox.convert")
         @views.html.components.listbox("sprints", "Sprints", validation="sprint_editbox.validate", conversion="sprint_editbox.convert")

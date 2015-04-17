@@ -1,3 +1,5 @@
+@maxAmountOfColumns : 3;
+
 body {
   font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
 }
@@ -19,6 +21,8 @@ body {
 .box-panel {
   .box-shadow(8px 8px 8px, grey);
   margin-right: 16px;
+  width: 96% / @maxAmountOfColumns;
+  min-width: 260px;
 }
 
 .message-bar {
