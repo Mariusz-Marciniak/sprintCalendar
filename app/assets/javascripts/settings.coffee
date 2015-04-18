@@ -68,7 +68,9 @@ root.holiday_editbox =
       dates = txt.match(datePattern)
       dateStr = dates[dates.length-1]
       if(dateStr.length < 6)
-        dateStr = '2012-'+dateStr
+        dayAndMonth = dateStr.split("-")
+        # convert to date to verify if data is correct, 2012 is leap year
+        dateStr = '2012-'+dayAndMonth[1]+'-'+dayAndMonth[0]
       date = new Date(dateStr)
       if(isNaN(date.getTime()))
         "Invalid date"
