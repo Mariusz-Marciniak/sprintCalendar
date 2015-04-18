@@ -56,14 +56,6 @@ object SettingsData {
     settingsDao.saveSprints(convertToJsArray(data \ Sprints))
   }
 
-  private def convertToJsArray(value: JsValue): JsArray = {
-    value match {
-      case v: JsArray => v
-      case _ => JsArray(Seq())
-    }
-  }
-
-
   def loadEmployees = settingsDao.loadEmployees
 
   def loadHolidays = settingsDao.loadHolidays

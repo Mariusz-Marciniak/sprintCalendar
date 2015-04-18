@@ -2,12 +2,35 @@ root = exports ? this
 
 $ ->
   $.each($("editable-listbox"),
-    (index, value) -> sc_vacations.vacations( value, value.getAttribute("id"))
+    (index, component) -> sc_vacations.vacations( component, component.getAttribute("id"))
   )
-  $("#saveBtn").click ->
-    $.each($("editable-listbox"), (index, value) -> alert(value.getAttribute("id")))
 
   $("editable-listbox").on('dataChanged',sc_main.dataChangedHandler)
+
+  $("#saveBtn").click ->
+    $("#success-bar").hide()
+    $("#error-bar").hide()
+    $.ajax
+      url: vacationsJsRoutes.controllers.Vacations.saveVacations().url
+      contentType: "application/json"
+      method: "POST"
+      successMessage: "Data was successfully saved"
+      errorMessage: "Save operation failed"
+      data: prepareData()
+      success: sc_main.dataPosted
+      error: sc_main.onError
+
+prepareData = () ->
+    vacationsTxt = '{'
+    $.each($("editable-listbox"),
+      (index, component) ->
+        if(index > 0)
+          vacationsTxt += ','
+        vacationsTxt += '"'+component.getAttribute("id")+'":'+JSON.stringify(component.rows)
+    )
+    vacationsTxt += '}'
+    vacationsTxt
+
 
 root.sc_vacations =
   vacations : (comp,identifier) ->
@@ -40,4 +63,4 @@ root.vacation_editbox =
     datePattern = /\d{4}-\d{1,2}-\d{1,2}\s*/g
     datesPart = datesPattern.exec(txt)
     dates = datesPart[0].split("::")
-    JSON.parse('{"label":"'+txt+'","from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
+    JSON.parse('{"label":"'+txt+'","accepted":false,"from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
