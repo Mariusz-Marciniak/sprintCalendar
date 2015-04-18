@@ -15,7 +15,6 @@ POST        /saveSettings                   controllers.Settings.saveSettings
 
 # Dashboard page
 GET         /dashboard                      controllers.Dashboard.mainPage
-POST        /register                       controllers.Dashboard.register
 
 # Vacations page
 GET         /vacations                      controllers.Vacations.mainPage

@@ -1,12 +1,13 @@
-@(tmpForm: Form[controllers.Dashboard.User])
-
-@import helper._
+@()
 
 @main("Dashboard",0) {
-    @helper.form(action=routes.Dashboard.register) {
-        <fieldset>
-            @inputText(tmpForm("login"))
-        </fieldset>
-        <input class="btn btn-primary" type="submit" value="@Messages("user.registration.register")" />
-    }
+    <link rel="import" href="@routes.Assets.at("bower_components/mm.webcomponents/timeline/timeline.html")" />
+    <script src="@routes.Assets.at("javascripts/dashboard.js")" type="text/javascript"></script>
+    <script src="@routes.Settings.javascriptRoutes" type="text/javascript"></script>
+    <script src="@routes.Vacations.javascriptRoutes" type="text/javascript"></script>
+
+    <div class="timeline-panel">
+        <timeline-panel id="dashboard-timeline" fromDate="2015-12-01" toDate="2015-12-31" selection="multi">
+        </timeline-panel>
+    </div>
 }

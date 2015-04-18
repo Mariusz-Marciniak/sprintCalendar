@@ -21,8 +21,22 @@ h1 {
   box-shadow:         @style @c;
 }
 
-.box-panel {
+.panel-shadow {
   .box-shadow(8px 8px 8px, grey);
+}
+
+.timeline-panel {
+  .panel-shadow;
+  width: 100%;
+  min-width: 500px;
+  min-height: 300px;
+  margin-top: 10px;
+  overflow: auto;
+}
+
+.box-panel {
+  .panel-shadow;
+  margin-top: 10px;
   margin-right: 16px;
   width: 96% / @maxAmountOfColumns;
   min-width: 260px;
