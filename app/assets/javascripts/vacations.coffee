@@ -1,5 +1,18 @@
 root = exports ? this
 
+$ ->
+  $.each($("editable-listbox"),
+    (index, value) -> sc_vacations.vacations( value, value.getAttribute("id"))
+  )
+  $("#saveBtn").click ->
+    $.each($("editable-listbox"), (index, value) -> alert(value.getAttribute("id")))
+
+  $("editable-listbox").on('dataChanged',sc_main.dataChangedHandler)
+
+root.sc_vacations =
+  vacations : (comp,identifier) ->
+    vacationsJsRoutes.controllers.Vacations.vacations(identifier).ajax(sc_main.fillRowsAjaxCall(comp))
+
 root.vacation_editbox =
   validate : (txt) ->
     pattern = /^\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/

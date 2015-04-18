@@ -2,12 +2,13 @@ package config
 
 import java.text.DateFormat
 
-import dao.SettingsDao
-import dao.memory.InMemorySettingsDao
+import dao.{SettingsDao, VacationsDao}
+import dao.memory.{InMemorySettingsDao, InMemoryVacationsDao}
 
 trait Configuration {
   val AppDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
-  val dao: SettingsDao
+  val settingsDao: SettingsDao
+  val vacationsDao: VacationsDao
 }
 
 object Configuration {
@@ -15,7 +16,8 @@ object Configuration {
 }
 
 object InMemoryConfiguration extends Configuration {
-  val dao = new InMemorySettingsDao
+  val settingsDao = new InMemorySettingsDao
+  val vacationsDao = new InMemoryVacationsDao
 }
 
 

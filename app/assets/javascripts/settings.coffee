@@ -5,10 +5,7 @@ $ ->
   sc_settings.holidays ( $( '#holidays' ) )
   sc_settings.sprints( $( '#sprints' ) )
 
-  dataChangedHandler = () -> sc_main.dataChanged = true
-  $('#employees').on('dataChanged',dataChangedHandler)
-  $('#holidays').on('dataChanged',dataChangedHandler)
-  $('#sprints').on('dataChanged',dataChangedHandler)
+  $("editable-listbox").on('dataChanged',sc_main.dataChangedHandler)
 
   $("#saveBtn").click ->
     $("#success-bar").hide()
@@ -23,38 +20,18 @@ $ ->
       successMessage: "Data was successfully saved"
       errorMessage: "Save operation failed"
       data: '{"employees":'+JSON.stringify(employeesSet)+', "holidays":'+JSON.stringify(holidaySet)+', "sprints":'+JSON.stringify(sprintSet)+'}'
-      success: dataPosted
-      error: onError
+      success: sc_main.dataPosted
+      error: sc_main.onError
 
 
 
 root.sc_settings =
   employees : (comp) ->
-    settingsJsRoutes.controllers.Settings.employees().ajax(fillRowsAjaxCall(comp))
+    settingsJsRoutes.controllers.Settings.employees().ajax(sc_main.fillRowsAjaxCall(comp))
   holidays : (comp) ->
-    settingsJsRoutes.controllers.Settings.holidays().ajax(fillRowsAjaxCall(comp))
+    settingsJsRoutes.controllers.Settings.holidays().ajax(sc_main.fillRowsAjaxCall(comp))
   sprints : (comp) ->
-    settingsJsRoutes.controllers.Settings.sprints().ajax(fillRowsAjaxCall(comp))
-
-fillRowsAjaxCall = (comp) -> {
-  invoker: comp
-  success: fillRows
-  error: onError
-}
-
-fillRows = (data) ->
-    $(this.invoker).attr('rows',JSON.stringify(data))
-
-postAjaxCall = () -> {
-  success: dataPosted
-  error: onError
-}
-
-dataPosted = (data) ->
-  sc_main.showMessageBar($("#success-bar"),this.successMessage)
-  sc_main.dataChanged = false
-
-onError = (jqHXR, error, status) -> sc_main.showMessageBar($("#error-bar"),this.errorMessage ? jqHXR.responseText)
+    settingsJsRoutes.controllers.Settings.sprints().ajax(sc_main.fillRowsAjaxCall(comp))
 
 root.employee_editbox =
   convert : (txt) ->

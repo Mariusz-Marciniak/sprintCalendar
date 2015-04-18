@@ -48,12 +48,12 @@ object SettingsData {
   val Holidays = "holidays"
   val Sprints = "sprints"
 
-  private val dao = config.dao
+  private val settingsDao = config.settingsDao
 
   def saveSettings(data: JsValue): Unit = {
-    dao.saveEmployees(convertToJsArray(data \ Employees))
-    dao.saveHolidays(convertToJsArray(data \ Holidays))
-    dao.saveSprints(convertToJsArray(data \ Sprints))
+    settingsDao.saveEmployees(convertToJsArray(data \ Employees))
+    settingsDao.saveHolidays(convertToJsArray(data \ Holidays))
+    settingsDao.saveSprints(convertToJsArray(data \ Sprints))
   }
 
   private def convertToJsArray(value: JsValue): JsArray = {
@@ -64,11 +64,11 @@ object SettingsData {
   }
 
 
-  def loadEmployees = dao.loadEmployees
+  def loadEmployees = settingsDao.loadEmployees
 
-  def loadHolidays = dao.loadHolidays
+  def loadHolidays = settingsDao.loadHolidays
 
-  def loadSprints = dao.loadSprints
+  def loadSprints = settingsDao.loadSprints
 
   def parseToDate(date: String): Date = config.AppDateFormat.parse(date)
 
