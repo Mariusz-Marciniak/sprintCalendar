@@ -5,6 +5,11 @@ $ ->
   sc_settings.holidays ( $( '#holidays' ) )
   sc_settings.sprints( $( '#sprints' ) )
 
+  dataChangedHandler = () -> sc_main.dataChanged = true
+  $('#employees').on('dataChanged',dataChangedHandler)
+  $('#holidays').on('dataChanged',dataChangedHandler)
+  $('#sprints').on('dataChanged',dataChangedHandler)
+
   $("#saveBtn").click ->
     $("#success-bar").hide()
     $("#error-bar").hide()
@@ -53,7 +58,6 @@ onError = (jqHXR, error, status) -> sc_main.showMessageBar($("#error-bar"),this.
 
 root.employee_editbox =
   convert : (txt) ->
-    sc_main.dataChanged = true
     JSON.parse('{"label":"'+txt+'","name":"'+txt+'"}')
 
 root.holiday_editbox =
@@ -78,7 +82,6 @@ root.holiday_editbox =
     dates = txt.match(datePattern)
     dateStr = dates[dates.length-1]
     name = pattern.exec(txt.substring(0,txt.length - dateStr.length))
-    sc_main.dataChanged = true
     JSON.parse('{"label":"'+txt+'","name":"'+name+'","date":"'+dateStr+'"}')
 
 root.sprint_editbox =
@@ -110,5 +113,5 @@ root.sprint_editbox =
     datesPart = datesPattern.exec(txt)
     namePart = namePattern.exec(txt.substring(0,txt.length-datesPart[0].length))
     dates = datesPart[0].split("::")
-    sc_main.dataChanged = true
     JSON.parse('{"label":"'+txt+'","name":"'+namePart+'","from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
+
