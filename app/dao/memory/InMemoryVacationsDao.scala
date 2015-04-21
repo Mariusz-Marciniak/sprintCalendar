@@ -1,8 +1,7 @@
 package dao.memory
 
 import dao.VacationsDao
-import play.api.libs.json
-import play.api.libs.json.{JsObject, JsValue, JsArray, JsString, JsBoolean}
+import play.api.libs.json.{JsArray, JsBoolean, JsObject, JsString}
 
 class InMemoryVacationsDao extends VacationsDao {
   private var vacations: Map[String, JsArray] = Map(
@@ -16,12 +15,18 @@ class InMemoryVacationsDao extends VacationsDao {
     ))
   )
 
+  val VacationsPrefix = "vacationsOf"
+
   override def saveVacations(employeeIdentifier: String, emplVacations: JsArray): Unit = {
     println(s"saving vacations $emplVacations of : $employeeIdentifier ")
     vacations = vacations + Tuple2(employeeIdentifier, emplVacations)
   }
   override def loadVacations(employeeIdentifier: String): JsArray = {
-    vacations(employeeIdentifier)
+    try {
+      vacations(employeeIdentifier)
+    } catch {
+      case e: NoSuchElementException => JsArray()
+    }
   }
 
 }

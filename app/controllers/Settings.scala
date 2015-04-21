@@ -51,9 +51,9 @@ object SettingsData {
   private val settingsDao = config.settingsDao
 
   def saveSettings(data: JsValue): Unit = {
-    settingsDao.saveEmployees(convertToJsArray(data \ Employees))
-    settingsDao.saveHolidays(convertToJsArray(data \ Holidays))
-    settingsDao.saveSprints(convertToJsArray(data \ Sprints))
+    settingsDao.saveEmployees(data \ Employees)
+    settingsDao.saveHolidays(data \ Holidays)
+    settingsDao.saveSprints(data \ Sprints)
   }
 
   def loadEmployees = settingsDao.loadEmployees

@@ -1,11 +1,7 @@
 package controllers
 
 import play.api.Routes
-import play.api.mvc.{Action, Controller};
-import play.api.libs.json.JsArray
-
-import java.util.NoSuchElementException
-import dao.VacationsDao
+import play.api.mvc.{Action, Controller}
 
 
 object Vacations extends Controller {
@@ -13,7 +9,6 @@ object Vacations extends Controller {
 
   private val settingsDao = config.settingsDao
   private val vacationsDao = config.vacationsDao
-  private val VacationsPrefix = "vacationsOf"
 
   def javascriptRoutes = Action {implicit request =>
     Ok(
@@ -27,19 +22,14 @@ object Vacations extends Controller {
   def saveVacations = Action(parse.json) { implicit request =>
     val names = settingsDao.loadEmployeesNames
     names.foreach { case name => {
-      val key = VacationsPrefix+name
-      vacationsDao.saveVacations(key, convertToJsArray(request.body \ key))
+      val key = vacationsDao.VacationsPrefix+name
+      vacationsDao.saveVacations(key, request.body \ key)
     }}
     Ok(views.html.vacations(names))
   }
 
-  def vacations(employee: String) = Action { implicit request => {
-      try {
-        Ok(vacationsDao.loadVacations(employee))
-      } catch {
-        case e: NoSuchElementException => Ok(JsArray())
-      }
-    }
+  def vacations(employee: String) = Action { implicit request =>
+    Ok(vacationsDao.loadVacations(employee))
   }
 
   def mainPage = Action { implicit request => {
