@@ -1,10 +1,13 @@
 package dao.memory
 
 import dao.SettingsDao
-import play.api.libs.json
 import play.api.libs.json.{JsObject, JsValue, JsArray, JsString}
 
+import scala.util.{Success, Try}
+
 class InMemorySettingsDao extends SettingsDao {
+  import config.JsonImplicits._
+
   private var employees: JsArray = JsArray(Seq(
     JsObject(Seq(("label",JsString("Thomas")))),
     JsObject(Seq(("label",JsString("Mary"))))
@@ -30,12 +33,13 @@ class InMemorySettingsDao extends SettingsDao {
     ))
   ))
 
-  override def saveEmployees(employees: JsArray): Unit = {
+  override def saveEmployees(employees: JsValue): Try[JsValue] = {
     println(s"saving employees: $employees")
     this.employees = employees
+    Success(employees)
   }
 
-  override def loadEmployees: JsArray = employees
+  override def loadEmployees: Try[JsValue] = Success(employees)
 
   override def loadEmployeesNames: Seq[String] = {
     (employees \\ "label").map {
@@ -44,18 +48,20 @@ class InMemorySettingsDao extends SettingsDao {
     }
   }
 
-  override def saveHolidays(holidays: JsArray): Unit = {
+  override def saveHolidays(holidays: JsValue): Try[JsValue] = {
     println(s"saving holidays: $holidays")
     this.holidays = holidays
+    Success(holidays)
   }
 
-  override def loadHolidays: JsArray = holidays
+  override def loadHolidays: Try[JsValue] = Success(holidays)
 
-  override def saveSprints(sprints: JsArray): Unit = {
+  override def saveSprints(sprints: JsValue): Try[JsValue] = {
     println(s"saving sprints: $sprints")
     this.sprints = sprints
+    Success(sprints)
   }
 
-  override def loadSprints: JsArray = sprints
+  override def loadSprints: Try[JsValue] = Success(sprints)
 
 }

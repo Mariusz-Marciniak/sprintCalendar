@@ -2,6 +2,7 @@ package config
 
 import java.text.DateFormat
 
+import dao.file.{FileVacationsDao, FileSettingsDao}
 import dao.{SettingsDao, VacationsDao}
 import dao.memory.{InMemorySettingsDao, InMemoryVacationsDao}
 
@@ -12,7 +13,7 @@ trait Configuration {
 }
 
 object Configuration {
-  implicit val config = InMemoryConfiguration
+  implicit val configuration = FileConfiguration
 }
 
 object InMemoryConfiguration extends Configuration {
@@ -20,4 +21,8 @@ object InMemoryConfiguration extends Configuration {
   val vacationsDao = new InMemoryVacationsDao
 }
 
+object FileConfiguration extends Configuration {
+  val settingsDao = new FileSettingsDao
+  val vacationsDao = new FileVacationsDao
+}
 

@@ -1,10 +1,13 @@
 package dao.memory
 
 import dao.VacationsDao
-import play.api.libs.json.{JsArray, JsBoolean, JsObject, JsString}
+import play.api.libs.json._
+
+import scala.util.{Failure, Success, Try}
 
 class InMemoryVacationsDao extends VacationsDao {
-  private var vacations: Map[String, JsArray] = Map(
+
+  private var vacations: Map[String, JsValue] = Map(
     "vacationsOfMary"->JsArray(Seq(
       JsObject(Seq(
         ("label",JsString("2015-12-12::2015-12-28")),
@@ -15,17 +18,16 @@ class InMemoryVacationsDao extends VacationsDao {
     ))
   )
 
-  val VacationsPrefix = "vacationsOf"
-
-  override def saveVacations(employeeIdentifier: String, emplVacations: JsArray): Unit = {
+  override def saveVacations(employeeIdentifier: String, emplVacations: JsValue): Try[JsValue] = {
     println(s"saving vacations $emplVacations of : $employeeIdentifier ")
     vacations = vacations + Tuple2(employeeIdentifier, emplVacations)
+    Success(emplVacations)
   }
-  override def loadVacations(employeeIdentifier: String): JsArray = {
+  override def loadVacations(employeeIdentifier: String): Try[JsValue] = {
     try {
-      vacations(employeeIdentifier)
+      Success(vacations(employeeIdentifier))
     } catch {
-      case e: NoSuchElementException => JsArray()
+      case e: NoSuchElementException => Failure(e)
     }
   }
 

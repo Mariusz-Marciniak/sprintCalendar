@@ -5,12 +5,13 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 
 import scala.collection.mutable.ArrayBuffer
+import config.JsonImplicits._
 
 object Dashboard extends Controller {
   import config.Configuration._
 
-  private val settingsDao = config.settingsDao
-  private val vacationsDao = config.vacationsDao
+  private val settingsDao = configuration.settingsDao
+  private val vacationsDao = configuration.vacationsDao
 
   def javascriptRoutes = Action {implicit request =>
     Ok(
@@ -23,10 +24,12 @@ object Dashboard extends Controller {
   def timelineData = Action { implicit request =>
     val timelines: ArrayBuffer[JsObject] = ArrayBuffer()
     val employees: Seq[String] = settingsDao.loadEmployeesNames
+
     for(employee <- employees) {
+      val entries: JsArray = vacationsDao.loadVacations(vacationsDao.VacationsPrefix+employee).getOrElse(JsArray())
       timelines += Json.obj(
         "label" -> employee,
-        "entries" -> vacationsDao.loadVacations(vacationsDao.VacationsPrefix+employee)
+        "entries" -> entries
       )
     }
     Ok(Json.toJson(timelines));

@@ -2,6 +2,7 @@ package controllers
 
 import java.util.Date
 
+import config.Configuration._
 import play.api.Routes
 import play.api.libs.json.{JsArray, JsValue}
 import play.api.mvc.{Action, Controller};
@@ -21,13 +22,13 @@ object Settings extends Controller {
   }
 
   def employees = Action { implicit request =>
-    Ok(SettingsData.loadEmployees);
+    Ok(SettingsData.loadEmployees.getOrElse(JsArray()));
   }
   def holidays = Action { implicit request =>
-    Ok(SettingsData.loadHolidays);
+    Ok(SettingsData.loadHolidays.getOrElse(JsArray()));
   }
   def sprints = Action { implicit request =>
-    Ok(SettingsData.loadSprints);
+    Ok(SettingsData.loadSprints.getOrElse(JsArray()));
   }
 
   def mainPage = Action { implicit request =>
@@ -48,7 +49,7 @@ object SettingsData {
   val Holidays = "holidays"
   val Sprints = "sprints"
 
-  private val settingsDao = config.settingsDao
+  private val settingsDao = configuration.settingsDao
 
   def saveSettings(data: JsValue): Unit = {
     settingsDao.saveEmployees(data \ Employees)
@@ -61,9 +62,4 @@ object SettingsData {
   def loadHolidays = settingsDao.loadHolidays
 
   def loadSprints = settingsDao.loadSprints
-
-  def parseToDate(date: String): Date = config.AppDateFormat.parse(date)
-
-  def formatDate(date: Date): String = config.AppDateFormat.format(date)
-
 }

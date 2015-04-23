@@ -1,14 +1,15 @@
 package controllers
 
 import play.api.Routes
+import play.api.libs.json.JsArray
 import play.api.mvc.{Action, Controller}
 
 
 object Vacations extends Controller {
   import config.Configuration._
 
-  private val settingsDao = config.settingsDao
-  private val vacationsDao = config.vacationsDao
+  private val settingsDao = configuration.settingsDao
+  private val vacationsDao = configuration.vacationsDao
 
   def javascriptRoutes = Action {implicit request =>
     Ok(
@@ -29,7 +30,7 @@ object Vacations extends Controller {
   }
 
   def vacations(employee: String) = Action { implicit request =>
-    Ok(vacationsDao.loadVacations(employee))
+    Ok(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
   }
 
   def mainPage = Action { implicit request => {

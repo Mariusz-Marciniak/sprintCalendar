@@ -1,8 +1,12 @@
 package dao
 
-import play.api.libs.json.JsArray
+import play.api.libs.json.JsValue
+
+import scala.util.Try
 
 trait VacationsDao {
-  def saveVacations(employeeIdentifier: String, vacations: JsArray): Unit
-  def loadVacations(employeeIdentifier: String): JsArray
+  val VacationsPrefix = "vacationsOf"
+
+  def saveVacations(employeeIdentifier: String, vacations: JsValue): Try[JsValue]
+  def loadVacations(employeeIdentifier: String): Try[JsValue]
 }
