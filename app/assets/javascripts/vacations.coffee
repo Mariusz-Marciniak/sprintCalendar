@@ -5,7 +5,7 @@ $ ->
     (index, component) -> sc_vacations.vacations( component, component.getAttribute("id"))
   )
 
-  $("editable-listbox").on('dataChanged',sc_main.dataChangedHandler)
+  $("editable-listbox").on('data-changed',sc_main.dataChangedHandler)
 
   $("#saveBtn").click ->
     $("#success-bar").hide()
@@ -48,11 +48,11 @@ root.vacation_editbox =
         "Invalid date - start of holiday"
       else
         dateStr = dates[dates.length-1]
-        dateTo = new Date(dateStr)
+        dateTo = new Date(dateStr.trim())
         if(isNaN(dateTo.getTime()))
           "Invalid date - end of holiday"
         else
-          if(dateFrom >= dateTo)
+          if(dateFrom > dateTo)
             "End of holiday should occur after beginning"
           else
             null

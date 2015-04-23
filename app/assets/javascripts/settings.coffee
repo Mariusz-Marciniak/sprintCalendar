@@ -5,7 +5,7 @@ $ ->
   sc_settings.holidays ( $( '#holidays' ) )
   sc_settings.sprints( $( '#sprints' ) )
 
-  $("editable-listbox").on('dataChanged',sc_main.dataChangedHandler)
+  $("editable-listbox").on('data-changed',sc_main.dataChangedHandler)
 
   $("#saveBtn").click ->
     $("#success-bar").hide()
@@ -43,7 +43,7 @@ root.holiday_editbox =
     datePattern = /(\d{4}-)*\d{1,2}-\d{1,2}\s*$/g
     if(pattern.exec(txt))
       dates = txt.match(datePattern)
-      dateStr = dates[dates.length-1]
+      dateStr = dates[dates.length-1].trim()
       if(dateStr.length < 6)
         # convert to date to verify if data is correct, 2012 is leap year
         dateStr = '2012-'+dateStr
@@ -74,7 +74,7 @@ root.sprint_editbox =
         "Invalid date - start of sprint"
       else
         dateStr = dates[dates.length-1]
-        dateTo = new Date(dateStr)
+        dateTo = new Date(dateStr.trim())
         if(isNaN(dateTo.getTime()))
           "Invalid date - end of sprint"
         else
