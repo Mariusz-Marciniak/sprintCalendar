@@ -25,18 +25,21 @@ h1 {
   .box-shadow(8px 8px 8px, grey);
 }
 
-.timeline-panel {
+.top-margin-panel {
   .panel-shadow;
+  margin-top: 10px;
+}
+
+.timeline-panel {
+  .top-margin-panel;
   width: 100%;
   min-width: 500px;
   min-height: 300px;
-  margin-top: 10px;
   overflow: auto;
 }
 
 .box-panel {
-  .panel-shadow;
-  margin-top: 10px;
+  .top-margin-panel;
   margin-right: 16px;
   width: 96% / @maxAmountOfColumns;
   min-width: 260px;

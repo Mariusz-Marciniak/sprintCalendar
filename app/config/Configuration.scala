@@ -1,13 +1,12 @@
 package config
 
-import java.text.DateFormat
-
-import dao.file.{FileVacationsDao, FileSettingsDao}
-import dao.{SettingsDao, VacationsDao}
+import dao.file.{FileSettingsDao, FileVacationsDao}
 import dao.memory.{InMemorySettingsDao, InMemoryVacationsDao}
+import dao.{SettingsDao, VacationsDao}
+import org.joda.time.format.DateTimeFormat
 
 trait Configuration {
-  val AppDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
+  val AppDateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
   val settingsDao: SettingsDao
   val vacationsDao: VacationsDao
 }

@@ -1,4 +1,4 @@
-@()
+@(fromDate: String, toDate: String)
 
 @main("Dashboard",0) {
     <link rel="import" href="@routes.Assets.at("bower_components/mm.webcomponents/timeline/timeline.html")" />
@@ -6,11 +6,11 @@
     <script src="@routes.Dashboard.javascriptRoutes" type="text/javascript"></script>
 
     <div class="timeline-panel">
-        <timeline-panel id="dashboard-timeline" fromDate="2015-12-01" toDate="2015-12-31" selection="single">
+        <timeline-panel id="dashboard-timeline" fromDate="@fromDate" toDate="@toDate" selection="single">
         </timeline-panel>
     </div>
-    <div class="panel-shadow">
-
+    <div class="top-margin-panel">
+        Filters @fromDate to @toDate
     </div>
 
 }

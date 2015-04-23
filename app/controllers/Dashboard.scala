@@ -5,6 +5,7 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 
 import scala.collection.mutable.ArrayBuffer
+import com.github.nscala_time.time.Imports._
 import config.JsonImplicits._
 
 object Dashboard extends Controller {
@@ -36,7 +37,12 @@ object Dashboard extends Controller {
   }
 
   def mainPage = Action {
-    Ok(views.html.dashboard())
+    val today = DateTime.now
+    println(today.day(1).plusMonths(2).minusDays(1))
+    Ok(views.html.dashboard(
+      configuration.AppDateFormatter.print(today.day(1)),
+      configuration.AppDateFormatter.print(today.day(1).plusMonths(2).minusDays(1))
+    ))
   }
 
 }
