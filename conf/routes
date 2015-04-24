@@ -3,26 +3,27 @@
 # ~~~~
 
 # Home page
-GET         /                             controllers.Dashboard.mainPage
+GET         /                                           controllers.Dashboard.mainPage
 
 # Settings page
-GET         /settings                     controllers.Settings.mainPage
-GET         /settingsJsRoutes             controllers.Settings.javascriptRoutes
-GET         /employees                    controllers.Settings.employees
-GET         /holidays                     controllers.Settings.holidays
-GET         /sprints                      controllers.Settings.sprints
-POST        /saveSettings                 controllers.Settings.saveSettings
+GET         /settings                                   controllers.Settings.mainPage
+GET         /settingsJsRoutes                           controllers.Settings.javascriptRoutes
+GET         /employees                                  controllers.Settings.employees
+GET         /holidays                                   controllers.Settings.holidays
+GET         /sprints                                    controllers.Settings.sprints
+POST        /saveSettings                               controllers.Settings.saveSettings
 
 # Dashboard page
-GET         /dashboard                    controllers.Dashboard.mainPage
-GET         /dashboardJsRoutes            controllers.Dashboard.javascriptRoutes
-GET         /timelineData                 controllers.Dashboard.timelineData
+GET         /dashboard                                  controllers.Dashboard.mainPage
+GET         /dashboardJsRoutes                          controllers.Dashboard.javascriptRoutes
+GET         /timelineData                               controllers.Dashboard.timelineData
+POST        /saveDefaults/:from/:to                     controllers.Dashboard.saveDefaults(from: String, to: String)
 
 # Vacations page
-GET         /vacations                    controllers.Vacations.mainPage
-GET         /vacationsJsRoutes            controllers.Vacations.javascriptRoutes
-GET         /vacationsOf/:employee        controllers.Vacations.vacations(employee: String)
-POST        /saveVacations                controllers.Vacations.saveVacations
+GET         /vacations                                  controllers.Vacations.mainPage
+GET         /vacationsJsRoutes                          controllers.Vacations.javascriptRoutes
+GET         /vacationsOf/:employee                      controllers.Vacations.vacations(employee: String)
+POST        /saveVacations                              controllers.Vacations.saveVacations
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                 controllers.Assets.at(path="/public", file)
+GET         /assets/*file                               controllers.Assets.at(path="/public", file)

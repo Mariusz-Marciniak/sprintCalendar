@@ -13,9 +13,11 @@
     </div>
     <div class="top-margin-panel">
         <br/>Timeline range:<br/>
-        <paper-input id="fromDate" label="from date" value="@fromDate" floatingLabel></paper-input>
-        <paper-input id="toDate" label="to date" value="@toDate" floatingLabel></paper-input>
-        <paper-icon-button icon="refresh" onClick="sc_dashboard.refreshTimeline();"></paper-icon-button>
+        <div>
+            <paper-input id="fromDate" label="from date" value="@fromDate" floatingLabel></paper-input>
+            <paper-input id="toDate" label="to date" value="@toDate" floatingLabel></paper-input>
+            <paper-icon-button icon="refresh" onClick="sc_dashboard.refreshTimeline();"></paper-icon-button>
+        </div>
     </div>
 
 }

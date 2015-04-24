@@ -24,4 +24,5 @@ root.sc_dashboard =
       $('#dashboard-timeline').attr("fromdate",strFrom)
       $('#dashboard-timeline').attr("todate",strTo)
       $('#dashboard-timeline').get(0).refresh()
+      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax()
       true
