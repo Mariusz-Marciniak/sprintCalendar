@@ -12,3 +12,6 @@ libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "1.8.0"
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 
+includeFilter in (Assets, LessKeys.less) := "*.less"
+
+excludeFilter in (Assets, LessKeys.less) := "_*.less"

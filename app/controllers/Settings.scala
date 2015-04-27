@@ -1,8 +1,5 @@
 package controllers
 
-import java.util.Date
-
-import config.Configuration._
 import play.api.Routes
 import play.api.libs.json.{JsArray, JsValue}
 import play.api.mvc.{Action, Controller};

@@ -64,7 +64,7 @@ root.holiday_editbox =
 
 root.sprint_editbox =
   validate : (txt) ->
-    pattern = /^[\w\s]+[,;: \t]+\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
+    pattern = /^[\w\d\s.]+[,;: \t]+\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
     datePattern = /\d{4}-\d{1,2}-\d{1,2}\s*/g
     if(pattern.exec(txt))
       dates = txt.match(datePattern)
@@ -85,11 +85,9 @@ root.sprint_editbox =
     else
       "Please enter sprint name followed by period yyyy-mm-dd::yyyy-mm-dd"
   convert : (txt) ->
-    namePattern = /^[\w\s]+\w+/
     datesPattern = /\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
-    datePattern = /\d{4}-\d{1,2}-\d{1,2}\s*/g
     datesPart = datesPattern.exec(txt)
-    namePart = namePattern.exec(txt.substring(0,txt.length-datesPart[0].length))
+    namePart = txt.substring(0, txt.length-datesPart[0].length).trim()
     dates = datesPart[0].split("::")
     JSON.parse('{"label":"'+txt+'","name":"'+namePart+'","from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
 

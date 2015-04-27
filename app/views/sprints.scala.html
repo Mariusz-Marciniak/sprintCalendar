@@ -1,0 +1,20 @@
+@()(implicit request: RequestHeader)
+
+
+@main("Sprints",2) {
+    <script src="@routes.Sprints.javascriptRoutes" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/sprints.js")" type="text/javascript"></script>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/sprints.css")">
+    <link rel="import" href="@routes.Assets.at("bower_components/mm.webcomponents/selectable-listbox/selectable-listbox.html")" />
+
+    <div horizontal layout>
+        <div class="sprint-selection">
+            <selectable-listbox id="sprints-list"/>
+        </div>
+        <div id="sprintData" class="sprint-data-panel">
+            <div class="footer-panel">
+                <core-icon-button id="saveBtn" icon="save"><span>Save</span></core-icon-button>
+            </div>
+        </div>
+    </div>
+}
