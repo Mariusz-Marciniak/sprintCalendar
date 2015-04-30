@@ -1,31 +1,47 @@
 package controllers
 
 import play.api.Routes
-import play.api.libs.json.{JsArray, JsValue}
+import play.api.libs.json.{JsObject, Json, JsArray, JsValue}
 import play.api.mvc.{Action, Controller};
 
 
 object Settings extends Controller {
 
-  def javascriptRoutes = Action {implicit request =>
+  import config.Configuration._
+
+  val Employees = "employees"
+  val Holidays = "holidays"
+  val Sprints = "sprints"
+  val DaysAndPrecisionOptions = "dayOptions"
+
+  private val settingsDao = configuration.settingsDao
+
+  def javascriptRoutes = Action { implicit request =>
     Ok(
-      Routes.javascriptRouter("settingsJsRoutes") (
+      Routes.javascriptRouter("settingsJsRoutes")(
         routes.javascript.Settings.employees,
         routes.javascript.Settings.holidays,
         routes.javascript.Settings.sprints,
+        routes.javascript.Settings.dayAndPrecisionOptions,
         routes.javascript.Settings.saveSettings
       )
     ).as("text/javascript")
   }
 
   def employees = Action { implicit request =>
-    Ok(SettingsData.loadEmployees.getOrElse(JsArray()));
+    Ok(settingsDao.loadEmployees.getOrElse(JsArray()));
   }
+
   def holidays = Action { implicit request =>
-    Ok(SettingsData.loadHolidays.getOrElse(JsArray()));
+    Ok(settingsDao.loadHolidays.getOrElse(JsArray()));
   }
+
   def sprints = Action { implicit request =>
-    Ok(SettingsData.loadSprints.getOrElse(JsArray()));
+    Ok(settingsDao.loadSprints.getOrElse(JsArray()));
+  }
+
+  def dayAndPrecisionOptions = Action { implicit request =>
+    Ok(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
   }
 
   def mainPage = Action { implicit request =>
@@ -33,30 +49,14 @@ object Settings extends Controller {
   }
 
   def saveSettings = Action(parse.json) { implicit request =>
-    SettingsData.saveSettings(request.body)
+    val data = request.body
+    settingsDao.saveEmployees(data \ Employees)
+    settingsDao.saveHolidays(data \ Holidays)
+    settingsDao.saveSprints(data \ Sprints)
+    settingsDao.saveDayAndPrecision(data \ DaysAndPrecisionOptions)
     Ok(views.html.settings())
   }
 
 }
 
-object SettingsData {
-  import config.Configuration._
 
-  val Employees = "employees"
-  val Holidays = "holidays"
-  val Sprints = "sprints"
-
-  private val settingsDao = configuration.settingsDao
-
-  def saveSettings(data: JsValue): Unit = {
-    settingsDao.saveEmployees(data \ Employees)
-    settingsDao.saveHolidays(data \ Holidays)
-    settingsDao.saveSprints(data \ Sprints)
-  }
-
-  def loadEmployees = settingsDao.loadEmployees
-
-  def loadHolidays = settingsDao.loadHolidays
-
-  def loadSprints = settingsDao.loadSprints
-}

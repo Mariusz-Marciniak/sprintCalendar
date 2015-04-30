@@ -9,6 +9,7 @@ class FileSettingsDao extends SettingsDao {
   val EmployeesFile = "data/employees.json"
   val HolidaysFile = "data/holidays.json"
   val SprintsFile = "data/sprints.json"
+  val DayAndPrecisionFile = "data/dpoptions.json"
 
   override def saveEmployees(employees: JsValue): Try[JsValue] = {
     println(s"saving employees to file: $employees")
@@ -42,4 +43,10 @@ class FileSettingsDao extends SettingsDao {
   }
   override def loadSprints: Try[JsValue] = load(SprintsFile)
 
+  override def saveDayAndPrecision(daysAndPrecisionOptions: JsValue): Try[JsValue] = {
+    println(s"saving days and precisions options: $daysAndPrecisionOptions")
+    save(SprintsFile, daysAndPrecisionOptions)
+  }
+
+  override def loadDayAndPrecision: Try[JsValue] = load(DayAndPrecisionFile)
 }

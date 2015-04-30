@@ -9,7 +9,7 @@
     <link rel="import" href="@routes.Assets.at("bower_components/paper-input/paper-input.html")" />
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/settings.css")" >
     <div class="settings-container">
-        <div class="columns-container" horizontal layout wrap>
+        <div horizontal justified layout wrap>
             @views.html.components.listbox("employees", "Employees", conversion = "employee_editbox.convert")
             @views.html.components.listbox("holidays", "Holidays", validation = "holiday_editbox.validate", conversion = "holiday_editbox.convert")
             @views.html.components.listbox("sprints", "Sprints", validation = "sprint_editbox.validate", conversion = "sprint_editbox.convert")
@@ -18,24 +18,24 @@
             <div class="time-options-section">
                 Workdays:
                 <div class="options-list" horizontal layout wrap>
-                    <div class="day-option"><paper-checkbox label="Monday" checked/></div>
-                    <div class="day-option"><paper-checkbox label="Tuesday" checked/></div>
-                    <div class="day-option"><paper-checkbox label="Wednesday" checked/></div>
-                    <div class="day-option"><paper-checkbox label="Thursday" checked/></div>
-                    <div class="day-option"><paper-checkbox label="Friday" checked/></div>
-                    <div class="day-option"><paper-checkbox label="Saturday" /></div>
-                    <div class="day-option"><paper-checkbox label="Sunday" /></div>
+                    <div class="day-option"><paper-checkbox id="wdmon" label="Monday" /></div>
+                    <div class="day-option"><paper-checkbox id="wdtue" label="Tuesday" /></div>
+                    <div class="day-option"><paper-checkbox id="wdwed" label="Wednesday" /></div>
+                    <div class="day-option"><paper-checkbox id="wdthr" label="Thursday" /></div>
+                    <div class="day-option"><paper-checkbox id="wdfri" label="Friday" /></div>
+                    <div class="day-option"><paper-checkbox id="wdsat" label="Saturday" /></div>
+                    <div class="day-option"><paper-checkbox id="wdsun" label="Sunday" /></div>
                 </div>
             </div>
             <div class="time-options-section">
                 Precision
-                <div class="options-list">
-                    <paper-radio-group selected="days">
+                <div class="options-list" horizontal layout>
+                    <paper-radio-group id="precisionType" selected="hours">
                         <paper-radio-button name="days" label="Days"></paper-radio-button>
                         <paper-radio-button name="hours" label="Hours"></paper-radio-button>
                     </paper-radio-group>
-                    <paper-input id="hoursPerDay" label="Amount of hours per day" floatingLabel></paper-input>
                 </div>
+                <paper-input id="hoursPerDay" label="Amount of hours per day" value="8" floatingLabel></paper-input>
             </div>
         </div>
         <div class="footer-panel">

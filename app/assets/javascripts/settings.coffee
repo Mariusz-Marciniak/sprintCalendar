@@ -4,7 +4,8 @@ $ ->
   sc_settings.employees ( $('#employees') )
   sc_settings.holidays ( $( '#holidays' ) )
   sc_settings.sprints( $( '#sprints' ) )
-
+  sc_settings.dayAndPrecisionOptions()
+  $("#hoursPerDay").hide()
   $("editable-listbox").on('data-changed',sc_main.dataChangedHandler)
 
   $("#saveBtn").click ->
@@ -24,7 +25,6 @@ $ ->
       error: sc_main.onError
 
 
-
 root.sc_settings =
   employees : (comp) ->
     settingsJsRoutes.controllers.Settings.employees().ajax(sc_main.fillRowsAjaxCall(comp))
@@ -32,6 +32,12 @@ root.sc_settings =
     settingsJsRoutes.controllers.Settings.holidays().ajax(sc_main.fillRowsAjaxCall(comp))
   sprints : (comp) ->
     settingsJsRoutes.controllers.Settings.sprints().ajax(sc_main.fillRowsAjaxCall(comp))
+  dayAndPrecisionOptions : () ->
+    settingsJsRoutes.controllers.Settings.dayAndPrecisionOptions().ajax(sc_main.executeOnSuccessAjaxCall(undefined, sc_settings.initDayTimeData))
+  initDayTimeData: (data) ->
+    $("#wdmon").prop("checked",data.workdays.Monday)
+    alert(data.precision.type)
+    $("#precisionType").prop("selectedItem",data.precision.type)
 
 root.employee_editbox =
   convert : (txt) ->
