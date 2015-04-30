@@ -12,10 +12,10 @@ class FileVacationsDao extends VacationsDao {
 
   override def saveVacations(employeeIdentifier: String, emplVacations: JsValue): Try[JsValue] = {
     println(s"saving vacations $emplVacations of : $employeeIdentifier ")
-    save(employeeIdentifier+".json", emplVacations)
+    save("data/"+employeeIdentifier+".json", emplVacations)
     Success(emplVacations)
   }
   override def loadVacations(employeeIdentifier: String): Try[JsValue] = {
-    load(employeeIdentifier+".json")
+    load("data/"+employeeIdentifier+".json")
   }
 }

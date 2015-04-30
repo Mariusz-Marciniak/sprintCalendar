@@ -6,9 +6,9 @@ import play.api.libs.json._
 import scala.util.{Failure, Success, Try}
 
 class FileSettingsDao extends SettingsDao {
-  val EmployeesFile = "employees.json"
-  val HolidaysFile = "holidays.json"
-  val SprintsFile = "sprints.json"
+  val EmployeesFile = "data/employees.json"
+  val HolidaysFile = "data/holidays.json"
+  val SprintsFile = "data/sprints.json"
 
   override def saveEmployees(employees: JsValue): Try[JsValue] = {
     println(s"saving employees to file: $employees")

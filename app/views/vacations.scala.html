@@ -5,7 +5,7 @@
     <script src="@routes.Assets.at("javascripts/vacations.js")" type="text/javascript"></script>
     <script src="@routes.Vacations.javascriptRoutes" type="text/javascript"></script>
 
-    <div horizontal layout wrap>
+    <div class="columns-container" horizontal layout wrap>
         @employees.map { case employee =>
             @views.html.components.listbox("vacationsOf"+employee,employee+"'s vacations", validation="vacation_editbox.validate", conversion="vacation_editbox.convert")
         }

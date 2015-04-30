@@ -7,7 +7,7 @@ import play.api.libs.functional.syntax._
 import scala.util.{Success, Failure, Try}
 
 class FileUserDefaultsDao extends UserDefaultsDao {
-  val DefaultsFile = "defaults.json"
+  val DefaultsFile = "data/defaults.json"
   implicit val UserDefaultsFormat = (
     (__ \ "timelineFrom").format[String] and
     (__ \ "timelineTo").format[String]
