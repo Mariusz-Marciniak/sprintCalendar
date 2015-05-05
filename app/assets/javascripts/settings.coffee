@@ -35,10 +35,18 @@ root.sc_settings =
   dayAndPrecisionOptions : () ->
     settingsJsRoutes.controllers.Settings.dayAndPrecisionOptions().ajax(sc_main.executeOnSuccessAjaxCall(undefined, sc_settings.initDayTimeData))
   initDayTimeData: (data) ->
-    $("#wdmon").prop("checked",data.workdays.Monday)
-    alert(data.precision.type)
-    $("#precisionType").prop("selectedItem",data.precision.type)
-
+    identifier = "option-"+data.precision.type
+    setTimeout ( =>
+            $("#"+identifier).attr("checked", true);
+            sc_settings.changeDayHours()
+          ), 50
+  changeDayHours: (identifier) ->
+    if(identifier == "option-days")
+        $("#option-hours").prop("checked", false);
+        $("#hoursPerDay").slideUp()
+    else
+        $("#option-days").prop("checked", false);
+        $("#hoursPerDay").slideDown()
 root.employee_editbox =
   convert : (txt) ->
     JSON.parse('{"label":"'+txt+'","name":"'+txt+'"}')

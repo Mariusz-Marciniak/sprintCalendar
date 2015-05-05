@@ -5,7 +5,6 @@
     <script src="@routes.Settings.javascriptRoutes" type="text/javascript"></script>
     <link rel="import" href="@routes.Assets.at("bower_components/paper-checkbox/paper-checkbox.html")" >
     <link rel="import" href="@routes.Assets.at("bower_components/paper-radio-button/paper-radio-button.html")" >
-    <link rel="import" href="@routes.Assets.at("bower_components/paper-radio-group/paper-radio-group.html")" >
     <link rel="import" href="@routes.Assets.at("bower_components/paper-input/paper-input.html")" />
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/settings.css")" >
     <div class="settings-container">
@@ -18,22 +17,24 @@
             <div class="time-options-section">
                 Workdays:
                 <div class="options-list" horizontal layout wrap>
-                    <div class="day-option"><paper-checkbox id="wdmon" label="Monday" /></div>
-                    <div class="day-option"><paper-checkbox id="wdtue" label="Tuesday" /></div>
-                    <div class="day-option"><paper-checkbox id="wdwed" label="Wednesday" /></div>
-                    <div class="day-option"><paper-checkbox id="wdthr" label="Thursday" /></div>
-                    <div class="day-option"><paper-checkbox id="wdfri" label="Friday" /></div>
-                    <div class="day-option"><paper-checkbox id="wdsat" label="Saturday" /></div>
-                    <div class="day-option"><paper-checkbox id="wdsun" label="Sunday" /></div>
+                    <div class="inline-option"><paper-checkbox id="wdmon" label="Monday" /></div>
+                    <div class="inline-option"><paper-checkbox id="wdtue" label="Tuesday" /></div>
+                    <div class="inline-option"><paper-checkbox id="wdwed" label="Wednesday" /></div>
+                    <div class="inline-option"><paper-checkbox id="wdthr" label="Thursday" /></div>
+                    <div class="inline-option"><paper-checkbox id="wdfri" label="Friday" /></div>
+                    <div class="inline-option"><paper-checkbox id="wdsat" label="Saturday" /></div>
+                    <div class="inline-option"><paper-checkbox id="wdsun" label="Sunday" /></div>
                 </div>
             </div>
             <div class="time-options-section">
                 Precision
                 <div class="options-list" horizontal layout>
-                    <paper-radio-group id="precisionType" selected="hours">
-                        <paper-radio-button name="days" label="Days"></paper-radio-button>
-                        <paper-radio-button name="hours" label="Hours"></paper-radio-button>
-                    </paper-radio-group>
+                    <paper-radio-button class="inline-option" id="option-days"
+                                        name="days" label="Days" onclick="sc_settings.changeDayHours(this.id)">
+                    </paper-radio-button>
+                    <paper-radio-button class="inline-option" id="option-hours"
+                                        name="hours" label="Hours" onclick="sc_settings.changeDayHours(this.id)">
+                    </paper-radio-button>
                 </div>
                 <paper-input id="hoursPerDay" label="Amount of hours per day" value="8" floatingLabel></paper-input>
             </div>
