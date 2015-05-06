@@ -6,10 +6,7 @@ import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 
 import scala.collection.mutable.ArrayBuffer
-import com.github.nscala_time.time.Imports._
 import config.JsonImplicits._
-
-import scala.io.Codec
 
 object Dashboard extends Controller {
   import config.Configuration._

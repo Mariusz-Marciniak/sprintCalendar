@@ -30,6 +30,7 @@ POST        /saveVacations                   controllers.Vacations.saveVacations
 GET         /sprintsData                     controllers.Sprints.mainPage
 GET         /sprintsJsRoutes                 controllers.Sprints.javascriptRoutes
 GET         /sprintsList                     controllers.Sprints.sprints
+GET         /sprintData/:sprintId            controllers.Sprints.sprintData(sprintId: String)
 POST        /saveSprintData/:sprintId        controllers.Sprints.saveSprintData(sprintId: String)
 
 

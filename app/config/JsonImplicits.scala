@@ -49,4 +49,15 @@ class JsArrayWrapper(_jsArray: JsArray) {
     applyFor(0)
   }
 
+  final def findRow(key : String, value: JsValue) : Option[JsValue] = {
+    val index = jsArray \\ key indexWhere(_.equals(value))
+    if(index >= 0)
+      Some(jsArray(index))
+    else
+      None
+  }
+
+  final def findRow(key : String, value: String) : Option[JsValue] = findRow(key, JsString(value))
+
 }
+

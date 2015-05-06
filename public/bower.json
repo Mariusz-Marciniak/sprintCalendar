@@ -20,6 +20,7 @@
     "core-icon-button": "Polymer/core-icon-button#~0.5.5",
     "paper-input": "Polymer/paper-input#^0.5",
     "paper-checkbox": "Polymer/paper-checkbox#^0.5",
-    "paper-radio-button": "Polymer/paper-radio-button#^0.5"
+    "paper-radio-button": "Polymer/paper-radio-button#^0.5",
+    "paper-slider": "Polymer/paper-slider#^0.5"
   }
 }
