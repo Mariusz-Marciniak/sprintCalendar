@@ -12,7 +12,7 @@ object Settings extends Controller {
   val Employees = "employees"
   val Holidays = "holidays"
   val Sprints = "sprints"
-  val DaysAndPrecisionOptions = "dayOptions"
+  val DaysAndPrecisionOptions = "dayHoursOptions"
 
   private val settingsDao = configuration.settingsDao
 

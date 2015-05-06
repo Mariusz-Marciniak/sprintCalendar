@@ -45,7 +45,7 @@ class FileSettingsDao extends SettingsDao {
 
   override def saveDayAndPrecision(daysAndPrecisionOptions: JsValue): Try[JsValue] = {
     println(s"saving days and precisions options: $daysAndPrecisionOptions")
-    save(SprintsFile, daysAndPrecisionOptions)
+    save(DayAndPrecisionFile, daysAndPrecisionOptions)
   }
 
   override def loadDayAndPrecision: Try[JsValue] = load(DayAndPrecisionFile)

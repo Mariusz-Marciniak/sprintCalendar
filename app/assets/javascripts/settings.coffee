@@ -20,7 +20,8 @@ $ ->
       method: "POST"
       successMessage: "Data was successfully saved"
       errorMessage: "Save operation failed"
-      data: '{"employees":'+JSON.stringify(employeesSet)+', "holidays":'+JSON.stringify(holidaySet)+', "sprints":'+JSON.stringify(sprintSet)+'}'
+      data: '{"employees":'+JSON.stringify(employeesSet)+', "holidays":'+JSON.stringify(holidaySet)+', "sprints":'+JSON.stringify(sprintSet)+
+        ', "dayHoursOptions":'+sc_settings.prepareDayAndPrecisionOptions()+'}'
       success: sc_main.dataPosted
       error: sc_main.onError
 
@@ -42,13 +43,14 @@ root.sc_settings =
     $("#wdfri").prop("checked",data.workdays.Friday)
     $("#wdsat").prop("checked",data.workdays.Saturday)
     $("#wdsun").prop("checked",data.workdays.Sunday)
-    $("#precisionType").attr("selected",data.precision.type)
     identifier = "option-"+data.precision.type
     $("#"+identifier).attr("checked", true);
     if(identifier == "option-days")
       $("#hoursPerDay").slideUp()
     else
+      $("#hoursPerDay").attr("value",data.precision.perDay)
       $("#hoursPerDay").slideDown()
+
   changeDayHours: (identifier) ->
     if(identifier == "option-days")
         $("#option-hours").prop("checked", false);
@@ -56,6 +58,26 @@ root.sc_settings =
     else
         $("#option-days").prop("checked", false);
         $("#hoursPerDay").slideDown()
+  prepareDayAndPrecisionOptions: () ->
+    result = {
+      "workdays" : {
+        "Monday" : $("#wdmon").prop("checked"),
+        "Tuesday" : $("#wdtue").prop("checked"),
+        "Wednesday" : $("#wdwed").prop("checked"),
+        "Thursday" : $("#wdthr").prop("checked"),
+        "Friday" : $("#wdfri").prop("checked"),
+        "Saturday" : $("#wdsat").prop("checked"),
+        "Sunday" : $("#wdsun").prop("checked")
+      },
+      "precision" : {
+      }
+    }
+    if($("#option-hours").prop("checked"))
+      result.precision.type = "hours"
+      result.precision.perDay = $("#hoursPerDay").val()
+    else
+      result.precision.type = "days"
+    JSON.stringify(result)
 
 root.employee_editbox =
   convert : (txt) ->
