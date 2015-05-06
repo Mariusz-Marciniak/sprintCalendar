@@ -44,10 +44,11 @@ root.sc_settings =
     $("#wdsun").prop("checked",data.workdays.Sunday)
     $("#precisionType").attr("selected",data.precision.type)
     identifier = "option-"+data.precision.type
-    setTimeout ( =>
-            $("#"+identifier).attr("checked", true);
-            sc_settings.changeDayHours()
-          ), 50
+    $("#"+identifier).attr("checked", true);
+    if(identifier == "option-days")
+      $("#hoursPerDay").slideUp()
+    else
+      $("#hoursPerDay").slideDown()
   changeDayHours: (identifier) ->
     if(identifier == "option-days")
         $("#option-hours").prop("checked", false);
