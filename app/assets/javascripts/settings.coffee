@@ -36,8 +36,21 @@ root.sc_settings =
     settingsJsRoutes.controllers.Settings.dayAndPrecisionOptions().ajax(sc_main.executeOnSuccessAjaxCall(undefined, sc_settings.initDayTimeData))
   initDayTimeData: (data) ->
     $("#wdmon").prop("checked",data.workdays.Monday)
-    alert(data.precision.type)
-    $("#precisionType").prop("selectedItem",data.precision.type)
+    $("#wdtue").prop("checked",data.workdays.Tuesday)
+    $("#wdwed").prop("checked",data.workdays.Wednesday)
+    $("#wdthr").prop("checked",data.workdays.Thursday)
+    $("#wdfri").prop("checked",data.workdays.Friday)
+    $("#wdsat").prop("checked",data.workdays.Saturday)
+    $("#wdsun").prop("checked",data.workdays.Sunday)
+    $("#precisionType").attr("selected",data.precision.type)
+    if(data.precision.type == "days")
+      #$("#option-days").attr("checked",true)
+      #$("#option-hours").attr("checked",false)
+      $("#hoursPerDay").hide()
+    else
+      #$("#option-hours").attr("checked",true)
+      #$("#option-days").attr("checked",false)
+      $("#hoursPerDay").show()
 
 root.employee_editbox =
   convert : (txt) ->
