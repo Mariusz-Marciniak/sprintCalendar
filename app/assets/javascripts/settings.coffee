@@ -43,14 +43,18 @@ root.sc_settings =
     $("#wdsat").prop("checked",data.workdays.Saturday)
     $("#wdsun").prop("checked",data.workdays.Sunday)
     $("#precisionType").attr("selected",data.precision.type)
-    if(data.precision.type == "days")
-      #$("#option-days").attr("checked",true)
-      #$("#option-hours").attr("checked",false)
-      $("#hoursPerDay").hide()
+    identifier = "option-"+data.precision.type
+    setTimeout ( =>
+            $("#"+identifier).attr("checked", true);
+            sc_settings.changeDayHours()
+          ), 50
+  changeDayHours: (identifier) ->
+    if(identifier == "option-days")
+        $("#option-hours").prop("checked", false);
+        $("#hoursPerDay").slideUp()
     else
-      #$("#option-hours").attr("checked",true)
-      #$("#option-days").attr("checked",false)
-      $("#hoursPerDay").show()
+        $("#option-days").prop("checked", false);
+        $("#hoursPerDay").slideDown()
 
 root.employee_editbox =
   convert : (txt) ->
