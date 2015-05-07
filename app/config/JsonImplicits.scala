@@ -35,18 +35,30 @@ class JsArrayWrapper(_jsArray: JsArray) {
 
   def jsArray = _jsArray
 
-  final def foreach[U](f: JsValue => U): Unit = {
-    def applyFor(index: Int) : JsValue = {
+  final def foreach(f: JsValue => Unit): Unit = {
+    def applyFor(index: Int) : Unit = {
       jsArray(index) match {
-        case u: JsUndefined => u
+        case _:JsUndefined => {}
         case v: JsValue => {
           f(v)
           applyFor(index+1)
         }
       }
-
     }
     applyFor(0)
+  }
+
+  final def map[A](f: JsValue => A): Seq[A] = {
+    def convert(index: Int, seq: Seq[A]) : Seq[A] = {
+      jsArray(index) match {
+        case u: JsUndefined => seq
+        case v: JsValue => {
+          convert(index+1,seq :+ f(v))
+        }
+      }
+
+    }
+    convert(0, Seq())
   }
 
   final def findRow(key : String, value: JsValue) : Option[JsValue] = {

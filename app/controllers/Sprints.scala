@@ -30,16 +30,12 @@ object Sprints extends Controller {
       val fromDate = DateTime.parse(castToJsString(sprint.get \ "from").value)
       val toDate = DateTime.parse(castToJsString(sprint.get \ "to").value)
       fromDate.dayOfWeek()
-      val maxWorkDays = amountOfWorkdays(fromDate,toDate,Seq(1,2))
-      val holidays = settingsDao.loadHolidays.getOrElse(JsArray())
-
-      settingsDao.loadEmployeesNames map { case employee =>
-        amountOfWorkdays(
-          sprint.get,
-          holidays,
-          vacationsDao.loadVacations(employee).getOrElse(JsArray())
-        )
-      }
+      val holidays = holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray()))
+      println(holidays)
+//      settingsDao.loadEmployeesNames map { case employee =>
+//        amountOfWorkdays(sprint.get,holidays,vacationsDao.loadVacations(employee).getOrElse(JsArray())
+//        )
+//      }
       Ok(views.html.components.sprintpanel(sprintId))
     } else NotFound
   }
