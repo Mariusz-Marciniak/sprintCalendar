@@ -2,7 +2,7 @@ package entities
 
 import com.github.nscala_time.time.Imports._
 import org.joda.time.{DateTimeFieldType, ReadablePartial}
-import play.api.libs.json.{JsArray, JsString, JsValue}
+import play.api.libs.json._
 
 
 object WorkingDays {
@@ -45,6 +45,18 @@ object WorkingDays {
       result = partial1.get(DateTimeFieldType.dayOfMonth()) - partial2.get(DateTimeFieldType.dayOfMonth())
     }
     result
+  }
+
+  def workdaysFromJsObject(settings: JsObject): Seq[Int] = {
+    def processWorkdays(workdays: JsObject): Seq[Int] = {
+      workdays \ "Monday"
+      Seq()
+    }
+    settings \ "workdays" match {
+      case _:JsUndefined => throw new IllegalArgumentException("Couldn't find workdays property")
+      case workdays: JsValue => processWorkdays(workdays)
+    }
+    Seq()
   }
 
   def amountOfWorkdays(from: LocalDate, to: LocalDate, workDays: Seq[Int]): Int  = {

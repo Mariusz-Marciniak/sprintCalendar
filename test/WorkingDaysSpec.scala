@@ -11,7 +11,7 @@ class WorkingDaysSpec extends Specification {
 
   import entities.WorkingDays._
 
-  val holidaysArray = Json.arr(
+  val holidaysJson = Json.arr(
     Json.obj(
       "date" -> "2015-11-23",
       "unused" -> "additional unused value"
@@ -34,6 +34,18 @@ class WorkingDaysSpec extends Specification {
     Array(DateTimeFieldType.monthOfYear(), DateTimeFieldType.dayOfMonth()),
     Array(7, 12)
   )
+  
+  val workdaysJson = Json.obj(
+    "workdays" -> Json.obj(
+      "Monday" -> true,
+      "Tuesday" -> true,
+      "Wednesday" -> true,
+      "Saturday" -> false,
+      "Sunday" -> false),
+    "otherdata" -> Json.obj(
+      "Monday" -> false,
+      "Sunday" -> true)
+  )
 
   "holidaysFromJsArray" should {
     "return empty sequence for no holidays" in {
@@ -41,7 +53,7 @@ class WorkingDaysSpec extends Specification {
     }
 
     "return dates from JSON" in {
-      val holidays = holidaysFromJsArray(holidaysArray)
+      val holidays = holidaysFromJsArray(holidaysJson)
       holidays must haveSize(2)
       holidays must containAllOf(Seq(completePartialDate, noYearPartialDate))
     }
@@ -124,6 +136,17 @@ class WorkingDaysSpec extends Specification {
     "return empty sequence when partials are not enclosed in range" in {
       val datesForPartialWithYear = holidaysInRange(Seq(completePartialDate, noYearPartialDate), fromDate, fromDate.plusMonths(3))
       datesForPartialWithYear must be empty
+    }
+  }
+
+  "workdaysFromJsObject" should {
+    "throw exception if object doesn't contain workdays property" in {
+      workdaysFromJsObject(Json.obj()) must throwA[IllegalArgumentException]
+    }
+
+    "treat all days as not working days by default" in {
+      workdaysFromJsObject(Json.obj("workdays" -> true)) must be empty
+
     }
   }
 
