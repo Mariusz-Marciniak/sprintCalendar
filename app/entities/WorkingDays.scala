@@ -1,8 +1,8 @@
 package entities
 
-import org.joda.time.{DateTimeField, DateTimeFieldType, ReadablePartial}
-import play.api.libs.json.{JsString, JsArray, JsValue}
 import com.github.nscala_time.time.Imports._
+import org.joda.time.{DateTimeFieldType, ReadablePartial}
+import play.api.libs.json.{JsArray, JsString, JsValue}
 
 
 object WorkingDays {
@@ -26,12 +26,12 @@ object WorkingDays {
     })
   }
 
-  def holidaysInRange(from: LocalDate, to: LocalDate, holidays: Seq[ReadablePartial]): Seq[ReadablePartial] = {
-    Seq()
-  }
+  def holidaysInRange(holidays: Seq[ReadablePartial], from: LocalDate, to: LocalDate): Seq[ReadablePartial] = {
+    def isParitalInRange(partial: ReadablePartial) : Boolean =
+      compareDatePartials(partial, from) >= 0 && compareDatePartials(partial, to) <= 0
 
-  def isParitalInRange(partial: ReadablePartial, from: LocalDate, to: LocalDate ) : Boolean =
-    compareDatePartials(partial, from) <= 0 && compareDatePartials(partial, to) >= 0
+    holidays filter isParitalInRange
+  }
 
   def compareDatePartials(partial1: ReadablePartial, partial2: ReadablePartial) : Int = {
     var result = 0
