@@ -5,6 +5,7 @@ import play.api.Routes
 import play.api.libs.json.JsArray
 import play.api.mvc.{Action, Controller}
 import com.github.nscala_time.time.Imports._
+import entities.DateRange
 
 object Sprints extends Controller {
 
@@ -30,7 +31,7 @@ object Sprints extends Controller {
     if (sprint.isDefined) {
       val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
       val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
-      val workingDays = allWorkingDays(fromDate,toDate)
+      val workingDays = allWorkingDays(DateRange(fromDate,toDate))
 
       println(workingDays.dates)
       settingsDao.loadEmployeesNames map { case employee =>
@@ -40,11 +41,11 @@ object Sprints extends Controller {
     } else NotFound
   }
 
-  def allWorkingDays(fromDate: LocalDate, toDate:LocalDate): WorkingDays = {
+  def allWorkingDays(range: DateRange): WorkingDays = {
     import entities.WorkingDays._
     workdaysInRange(
-      fromDate, toDate, workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
-    ) filterHolidays(holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),fromDate,toDate))
+      range, workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
+    ) filterHolidays(holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),range))
   }
 
 

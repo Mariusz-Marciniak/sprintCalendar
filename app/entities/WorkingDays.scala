@@ -34,20 +34,19 @@ object WorkingDays {
   /**
    * Prepares sequence of dates that match with given partials in [fromDate,toDate] range. For partials without year it will return specific day for each year
    * @param holidays
-   * @param fromDate
-   * @param toDate
+   * @param range
    * @return
    */
-  def holidaysInRange(holidays: Holidays, fromDate: LocalDate, toDate: LocalDate): Dates = {
+  def holidaysInRange(holidays: Holidays, range: DateRange): Dates = {
     def isParitalInRange(partial: ReadablePartial) : Boolean =
-      compareDatePartials(partial, fromDate) >= 0 && compareDatePartials(partial, toDate) <= 0
+      compareDatePartials(partial, range.fromDate) >= 0 && compareDatePartials(partial, range.toDate) <= 0
 
     holidays filter isParitalInRange map (partial =>
       if(partial.isSupported(DateTimeFieldType.year()))
         List(new LocalDate(partial.get(DateTimeFieldType.year()),partial.get(DateTimeFieldType.monthOfYear()),partial.get(DateTimeFieldType.dayOfMonth())))
       else
         for {
-          year <- fromDate.year.get to toDate.year.get
+          year <- range.fromDate.year.get to range.toDate.year.get
         } yield new LocalDate(year,partial.get(DateTimeFieldType.monthOfYear()),partial.get(DateTimeFieldType.dayOfMonth()))
       ) flatten
   }
@@ -113,20 +112,30 @@ object WorkingDays {
 
   /**
    * Returns all workdays that are included in dates range
-   * @param from
-   * @param to
+   * @param range
    * @param workdays in JavaScript format (Sunday - 0)
    * @return
    */
-  def workdaysInRange(from: LocalDate, to: LocalDate, workdays: Seq[Int]): WorkingDays  = {
-    var date = from
+  def workdaysInRange(range: DateRange, workdays: Seq[Int]): WorkingDays  = {
+    var date = range.fromDate
     var result = Array[LocalDate]()
-    while(date.isBefore(to) || date.isEqual(to)) {
+    while(date.isBefore(range.toDate) || date.isEqual(range.toDate)) {
       if(workdays contains convertWeekDayToJs(date.dayOfWeek().get))
         result = result :+ date
       date = date.plusDays(1)
     }
     WorkingDays(result.toSeq)
+  }
+  
+  /**
+   * 
+   */
+  def vacationsFromJsArray(vacations: JsArray) : Seq[DateRange] = {
+    vacations map (jsValue =>  {
+      val fromDate : JsString = jsValue \ "from"
+      val toDate : JsString = jsValue \ "to"
+      DateRange(LocalDate.parse(fromDate.value),LocalDate.parse(toDate.value))
+    })
   }
 
 }
@@ -135,7 +144,11 @@ case class WorkingDays(dates: Dates) {
   def filterHolidays(holidays: Dates) : WorkingDays = {
     WorkingDays (dates filter (!holidays.contains(_)))
   }
-  def filterEmployeeVacations(vacations: Holidays) : WorkingDays = {
+  def filterEmployeeVacations(vacations: Seq[DateRange]) : WorkingDays = {
     this
   }
+}
+
+case class DateRange(fromDate:LocalDate, toDate: LocalDate) {
+  def contains(date: LocalDate): Boolean = !(fromDate.isAfter(date) || toDate.isBefore(date)) 
 }
