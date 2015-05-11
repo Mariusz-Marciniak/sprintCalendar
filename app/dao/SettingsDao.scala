@@ -1,19 +1,21 @@
 package dao
 
+import entities.WorkingDays
 import play.api.libs.json.{Json, JsObject, JsValue}
 
 import scala.util.Try
 
 trait SettingsDao {
+
   val DefaultDaysAndPrecisionOptions: JsObject = Json.obj(
     "workdays" -> Json.obj(
-      "Monday" -> true,
-      "Tuesday" -> true,
-      "Wednesday" -> true,
-      "Thursday" -> true,
-      "Friday" -> true,
-      "Saturday" -> false,
-      "Sunday" -> false),
+      WorkingDays.DaysNames(0) -> true,
+      WorkingDays.DaysNames(1) -> true,
+      WorkingDays.DaysNames(2) -> true,
+      WorkingDays.DaysNames(3) -> true,
+      WorkingDays.DaysNames(4) -> true,
+      WorkingDays.DaysNames(5) -> false,
+      WorkingDays.DaysNames(6) -> false),
     "precision" -> Json.obj(
       "type" -> "days"
     )

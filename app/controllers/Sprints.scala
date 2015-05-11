@@ -1,5 +1,6 @@
 package controllers
 
+import entities.WorkingDays
 import play.api.Routes
 import play.api.libs.json.JsArray
 import play.api.mvc.{Action, Controller}
@@ -27,18 +28,25 @@ object Sprints extends Controller {
     import entities.WorkingDays._
     val sprint = castToJsArray(settingsDao.loadSprints.getOrElse(JsArray())).findRow("label", sprintId)
     if (sprint.isDefined) {
-      val fromDate = DateTime.parse(castToJsString(sprint.get \ "from").value)
-      val toDate = DateTime.parse(castToJsString(sprint.get \ "to").value)
-      fromDate.dayOfWeek()
-      val holidays = holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray()))
-      println(holidays)
-//      settingsDao.loadEmployeesNames map { case employee =>
-//        amountOfWorkdays(sprint.get,holidays,vacationsDao.loadVacations(employee).getOrElse(JsArray())
-//        )
-//      }
+      val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
+      val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
+      val workingDays = allWorkingDays(fromDate,toDate)
+
+      println(workingDays.dates)
+      settingsDao.loadEmployeesNames map { case employee =>
+        vacationsDao.loadVacations(employee).getOrElse(JsArray())
+      }
       Ok(views.html.components.sprintpanel(sprintId))
     } else NotFound
   }
+
+  def allWorkingDays(fromDate: LocalDate, toDate:LocalDate): WorkingDays = {
+    import entities.WorkingDays._
+    workdaysInRange(
+      fromDate, toDate, workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
+    ) filterHolidays(holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),fromDate,toDate))
+  }
+
 
   def saveSprintData(sprintId: String) = Action(parse.json) { implicit request =>
     Ok("aqq")
