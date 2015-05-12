@@ -11,11 +11,13 @@ import scala.util.{Failure, Success, Try}
 class FileVacationsDao extends VacationsDao {
 
   override def saveVacations(employeeIdentifier: String, emplVacations: JsValue): Try[JsValue] = {
-    println(s"saving vacations $emplVacations of : $employeeIdentifier ")
-    save("data/"+employeeIdentifier+".json", emplVacations)
+    val identifier = appendPrefixIfNotPresent(employeeIdentifier)
+    println(s"saving vacations $emplVacations of : $identifier ")
+    save("data/"+identifier+".json", emplVacations)
     Success(emplVacations)
   }
   override def loadVacations(employeeIdentifier: String): Try[JsValue] = {
-    load("data/"+employeeIdentifier+".json")
+    val identifier = appendPrefixIfNotPresent(employeeIdentifier)
+    load("data/"+identifier+".json")
   }
 }

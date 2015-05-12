@@ -19,13 +19,15 @@ class InMemoryVacationsDao extends VacationsDao {
   )
 
   override def saveVacations(employeeIdentifier: String, emplVacations: JsValue): Try[JsValue] = {
-    println(s"saving vacations $emplVacations of : $employeeIdentifier ")
-    vacations = vacations + Tuple2(employeeIdentifier, emplVacations)
+    val identifier = appendPrefixIfNotPresent(employeeIdentifier)
+    println(s"saving vacations $emplVacations of : $identifier ")
+    vacations = vacations + Tuple2(identifier, emplVacations)
     Success(emplVacations)
   }
   override def loadVacations(employeeIdentifier: String): Try[JsValue] = {
     try {
-      Success(vacations(employeeIdentifier))
+      val identifier = appendPrefixIfNotPresent(employeeIdentifier)
+      Success(vacations(identifier))
     } catch {
       case e: NoSuchElementException => Failure(e)
     }

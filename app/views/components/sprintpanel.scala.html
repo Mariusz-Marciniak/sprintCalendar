@@ -1,3 +1,11 @@
-@(sprintName: String)
+@(sprintName: String, employeeCapacity: Seq[Tuple2[String,Int]] )
+
+    <link rel="import" href="@routes.Assets.at("bower_components/paper-slider/paper-slider.html")" />
 
     <h3>@sprintName</h3>
+    @for(entry <- employeeCapacity) {
+        <div>
+            <div>@entry._1</div>
+            <div><paper-slider class="full-view" min="0" max="@entry._2" value="@entry._2" editable></paper-slider></div>
+        </div>
+    }

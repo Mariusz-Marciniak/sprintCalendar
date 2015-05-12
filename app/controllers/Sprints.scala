@@ -31,21 +31,36 @@ object Sprints extends Controller {
     if (sprint.isDefined) {
       val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
       val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
-      val workingDays = allWorkingDays(DateRange(fromDate,toDate))
+      val workingDays = workingDaysWithoutHolidays(DateRange(fromDate,toDate))
+      val multiplier = hoursMultiplier
 
-      println(workingDays.dates)
-      settingsDao.loadEmployeesNames map { case employee =>
-        vacationsDao.loadVacations(employee).getOrElse(JsArray())
+      val employeeCapacity = settingsDao.loadEmployeesNames map { case employee => (
+        employee,
+        workingDays.filterEmployeeVacations(
+          vacationsFromJsArray(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
+        ).dates.size * multiplier)
       }
-      Ok(views.html.components.sprintpanel(sprintId))
+      Ok(views.html.components.sprintpanel(sprintId, employeeCapacity))
     } else NotFound
   }
 
-  def allWorkingDays(range: DateRange): WorkingDays = {
+  private def hoursMultiplier: Int = {
+    val settings = settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions)
+    val precisionType = castToJsString(settings \ "precision" \ "type")
+    if("hours".equals(precisionType.value))
+      castToJsString(settings \ "precision" \ "perDay").value.toInt
+    else
+      1
+  }
+
+  def workingDaysWithoutHolidays(range: DateRange): WorkingDays = {
     import entities.WorkingDays._
     workdaysInRange(
-      range, workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
-    ) filterHolidays(holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),range))
+      range,
+      workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
+    ) filterHolidays(
+      holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),range)
+    )
   }
 
 

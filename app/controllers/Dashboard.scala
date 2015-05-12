@@ -36,7 +36,7 @@ object Dashboard extends Controller {
     val employees: Seq[String] = settingsDao.loadEmployeesNames
 
     for(employee <- employees) {
-      val entries: JsArray = vacationsDao.loadVacations(vacationsDao.VacationsPrefix+employee).getOrElse(JsArray())
+      val entries: JsArray = vacationsDao.loadVacations(employee).getOrElse(JsArray())
       timelines += Json.obj(
         "label" -> employee,
         "entries" -> entries

@@ -237,16 +237,6 @@ class WorkingDaysSpec extends Specification {
     }
   }
 
-  "filterHolidays" should {
-    "return the same list if there are no holidays" in {
-      workdaysInRange(twoYearsRange, Seq(1,2,3,4,5)).filterHolidays(Seq()).dates must haveSize(522)
-    }
-    "filter holidays and return new workdays" in {
-      val holidays = holidaysInRange(holidaysFromJsArray(holidaysJson), twoYearsRange)
-      workdaysInRange(twoYearsRange, Seq(1,2,3,4,5)).filterHolidays(holidays).dates must haveSize(519)
-    }
-  }
-
   "vacationsFromJsArray" should {
     "return empty collection when empty array is passed" in {
       vacationsFromJsArray(Json.arr()) must be empty
@@ -282,5 +272,26 @@ class WorkingDaysSpec extends Specification {
     }
 
   }
+
+  "WorkingDays.filterHolidays" should {
+    "return the same list if there are no holidays" in {
+      workdaysInRange(twoYearsRange, Seq(1,2,3,4,5)).filterHolidays(Seq()).dates must haveSize(522)
+    }
+    "filter holidays and return new workdays" in {
+      val holidays = holidaysInRange(holidaysFromJsArray(holidaysJson), twoYearsRange)
+      workdaysInRange(twoYearsRange, Seq(1,2,3,4,5)).filterHolidays(holidays).dates must haveSize(519)
+    }
+  }
+
+  "WorkingDays.filterEmployeeVacations" should {
+    "return the same list if there are no vacations" in {
+      workdaysInRange(twoYearsRange, Seq(1,2,3,4,5)).filterEmployeeVacations(Seq()).dates must haveSize(522)
+    }
+    "filter days that are during vacations and return new workdays" in {
+      val vacations = vacationsFromJsArray(vacationsJson)
+      workdaysInRange(twoYearsRange, Seq(1,2,3,4,5)).filterEmployeeVacations(vacations).dates must haveSize(498)
+    }
+  }
+
 
 }

@@ -9,4 +9,6 @@ trait VacationsDao {
 
   def saveVacations(employeeIdentifier: String, vacations: JsValue): Try[JsValue]
   def loadVacations(employeeIdentifier: String): Try[JsValue]
+
+  def appendPrefixIfNotPresent(identifier: String): String = if(identifier.startsWith(VacationsPrefix)) identifier else VacationsPrefix+identifier
 }

@@ -145,10 +145,11 @@ case class WorkingDays(dates: Dates) {
     WorkingDays (dates filter (!holidays.contains(_)))
   }
   def filterEmployeeVacations(vacations: Seq[DateRange]) : WorkingDays = {
-    this
+    WorkingDays(dates filter(date => vacations.find(_.contains(date)) == None))
   }
 }
 
 case class DateRange(fromDate:LocalDate, toDate: LocalDate) {
-  def contains(date: LocalDate): Boolean = !(fromDate.isAfter(date) || toDate.isBefore(date)) 
+  def notContains(date: LocalDate): Boolean = fromDate.isAfter(date) || toDate.isBefore(date)
+  def contains(date: LocalDate): Boolean = !notContains(date)
 }
