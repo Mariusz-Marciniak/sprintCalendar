@@ -69,13 +69,13 @@ object Sprints extends Controller {
   }
 
   def mainPage = Action { implicit request => {
-    Ok(views.html.sprints())
-  }
+      Ok(views.html.sprints())
+    }
   }
 
   def sprints = Action { implicit request => {
-    Ok(settingsDao.loadSprints.getOrElse(JsArray()))
-  }
+      Ok(settingsDao.loadSprints.getOrElse(JsArray()))
+    }
   }
 
 
