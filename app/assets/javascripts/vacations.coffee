@@ -26,7 +26,7 @@ prepareData = () ->
       (index, component) ->
         if(index > 0)
           vacationsTxt += ','
-        vacationsTxt += '"'+component.getAttribute("id")+'":'+JSON.stringify(component.rows)
+        vacationsTxt += '"'+sc_main.escape(null, component.getAttribute("id"))+'":'+JSON.stringify(component.rows,sc_main.escape)
     )
     vacationsTxt += '}'
     vacationsTxt

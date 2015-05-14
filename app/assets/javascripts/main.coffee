@@ -40,3 +40,16 @@ root.sc_main =
     sc_main.dataChanged = false
 
   onError : (jqHXR, error, status) -> sc_main.showMessageBar($("#error-bar"),this.errorMessage ? jqHXR.responseText)
+
+  escape : (key, val) ->
+    if (typeof(val)=="string")
+      val.replace(/[\"]/g, '\\"')
+      .replace(/[\\]/g, '\\\\')
+      .replace(/[\/]/g, '\\/')
+      .replace(/[\b]/g, '\\b')
+      .replace(/[\f]/g, '\\f')
+      .replace(/[\n]/g, '\\n')
+      .replace(/[\r]/g, '\\r')
+      .replace(/[\t]/g, '\\t')
+    else
+      val

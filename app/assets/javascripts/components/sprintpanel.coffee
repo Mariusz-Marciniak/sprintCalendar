@@ -15,4 +15,6 @@ $("#saveBtn").click ->
     error: sc_main.onError
 
 prepareData = () ->
-  '{"xxx":"yyy"}'
+  '{ "amountOfSp":"'+$("#storyPoints").prop("value")
+  +'""'
+  +'"}'
