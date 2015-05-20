@@ -59,8 +59,6 @@ object Sprints extends Controller {
 
   private def availability(employee: String, inSprint: JsValue, maximum: Int) : Int = {
     try {
-      println(castToJsArray(inSprint \ "workload"))
-      println(castToJsArray(inSprint \ "workload").findRow("employee",employee))
       castToJsArray(inSprint \ "workload").findRow("employee",employee) match {
         case Some(v) => castToJsNumber(v \ "availability").value.toInt
         case None => maximum
