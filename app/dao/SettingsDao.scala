@@ -9,12 +9,12 @@ trait SettingsDao {
 
   val DefaultDaysAndPrecisionOptions: JsObject = Json.obj(
     "workdays" -> Json.obj(
-      WorkingDays.DaysNames(0) -> true,
+      WorkingDays.DaysNames(0) -> false,
       WorkingDays.DaysNames(1) -> true,
       WorkingDays.DaysNames(2) -> true,
       WorkingDays.DaysNames(3) -> true,
       WorkingDays.DaysNames(4) -> true,
-      WorkingDays.DaysNames(5) -> false,
+      WorkingDays.DaysNames(5) -> true,
       WorkingDays.DaysNames(6) -> false),
     "precision" -> Json.obj(
       "type" -> "days"

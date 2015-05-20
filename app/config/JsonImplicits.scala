@@ -25,6 +25,13 @@ object JsonImplicits {
     }
   }
 
+  implicit def castToJsNumber(value: Any): JsNumber = {
+    value match {
+      case v: JsNumber => v
+      case _ => JsNumber(0)
+    }
+  }
+
   implicit def wrapJsArray(arr : JsArray): JsArrayWrapper = new JsArrayWrapper(arr)
 
   implicit def unwrapJsArray(wrp : JsArrayWrapper): JsArray = wrp.jsArray

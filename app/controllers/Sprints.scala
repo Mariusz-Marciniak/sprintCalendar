@@ -2,7 +2,7 @@ package controllers
 
 import entities.WorkingDays
 import play.api.Routes
-import play.api.libs.json.JsArray
+import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 import com.github.nscala_time.time.Imports._
 import entities.DateRange
@@ -14,6 +14,7 @@ object Sprints extends Controller {
 
   private val settingsDao = configuration.settingsDao
   private val vacationsDao = configuration.vacationsDao
+  private val sprintsDao = configuration.sprintsDao
 
   def javascriptRoutes = Action { implicit request =>
     Ok(
@@ -29,19 +30,45 @@ object Sprints extends Controller {
     import entities.WorkingDays._
     val sprint = castToJsArray(settingsDao.loadSprints.getOrElse(JsArray())).findRow("label", sprintId)
     if (sprint.isDefined) {
+      val sprintData = sprintsDao.loadSprintData(sprintId).getOrElse(Json.obj())
       val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
       val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
       val workingDays = workingDaysWithoutHolidays(DateRange(fromDate,toDate))
       val multiplier = hoursMultiplier
 
-      val employeeCapacity = settingsDao.loadEmployeesNames map { case employee => (
-        employee,
-        workingDays.filterEmployeeVacations(
-          vacationsFromJsArray(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
-        ).dates.size * multiplier)
+      val employeeCapacity = settingsDao.loadEmployeesNames map {
+        case employee => {
+          val maxAvailability = workingDays.filterEmployeeVacations(
+            vacationsFromJsArray(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
+          ).dates.size * multiplier
+
+          (employee,availability(employee, sprintData, maxAvailability),maxAvailability)
+        }
       }
-      Ok(views.html.components.sprintpanel(sprintId, employeeCapacity))
+      Ok(views.html.components.sprintpanel(sprintId, storyPoints(sprintData),  employeeCapacity))
     } else NotFound
+  }
+
+  private def storyPoints(inSprint: JsValue) : Int = {
+    try {
+      castToJsNumber(inSprint \ "storyPoints").value.toInt
+    } catch {
+      case e:NumberFormatException => 0
+    }
+  }
+
+  private def availability(employee: String, inSprint: JsValue, maximum: Int) : Int = {
+    try {
+      println(castToJsArray(inSprint \ "workload"))
+      println(castToJsArray(inSprint \ "workload").findRow("employee",employee))
+      castToJsArray(inSprint \ "workload").findRow("employee",employee) match {
+        case Some(v) => castToJsNumber(v \ "availability").value.toInt
+        case None => maximum
+      }
+
+    } catch {
+      case e:NumberFormatException => maximum
+    }
   }
 
   private def hoursMultiplier: Int = {

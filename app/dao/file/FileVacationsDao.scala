@@ -11,12 +11,12 @@ class FileVacationsDao extends VacationsDao with FileNameConverter {
     val identifier = appendPrefixIfNotPresent(employeeIdentifier)
     println(s"saving vacations $emplVacations of : $identifier ")
     val data = Json.obj("id" -> employeeIdentifier, "vacations"-> emplVacations)
-    save("data/"+toFilename(identifier)+".json", data)
+    save("data/vacations/"+toFilename(identifier)+".json", data)
     Success(emplVacations)
   }
   override def loadVacations(employeeIdentifier: String): Try[JsValue] = {
     val identifier = appendPrefixIfNotPresent(employeeIdentifier)
-    load("data/"+toFilename(identifier)+".json") match {
+    load("data/vacations/"+toFilename(identifier)+".json") match {
       case Success(v) => Success(v \ "vacations")
       case Failure(e) => Failure(e)
     }

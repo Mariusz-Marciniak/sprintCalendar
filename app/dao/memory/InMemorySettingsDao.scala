@@ -14,22 +14,22 @@ class InMemorySettingsDao extends SettingsDao {
   ))
   private var holidays: JsArray = JsArray(Seq(
     JsObject(Seq(
-      ("label",JsString("Christmas Day 25-12")),
+      ("label",JsString("Christmas Day 12-25")),
       ("name",JsString("Christmas Day")),
-      ("date",JsString("25-12"))
+      ("date",JsString("12-25"))
     )),
     JsObject(Seq(
-      ("label",JsString("Boxing Day 26-12")),
+      ("label",JsString("Boxing Day 12-26")),
       ("name",JsString("Boxing Day")),
-      ("date",JsString("26-12"))
+      ("date",JsString("12-26"))
     ))
   ))
   private var sprints: JsArray = JsArray(Seq(
     JsObject(Seq(
-      ("label",JsString("Sprint 1 2015-12-14::2016-1-1")),
+      ("label",JsString("Sprint 1 2015-12-14::2016-01-01")),
       ("name",JsString("Sprint 1")),
       ("from",JsString("2015-12-14")),
-      ("to",JsString("2016-1-1"))
+      ("to",JsString("2016-01-01"))
     ))
   ))
 
