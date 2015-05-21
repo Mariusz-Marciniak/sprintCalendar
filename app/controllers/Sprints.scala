@@ -45,7 +45,7 @@ object Sprints extends Controller {
           (employee,availability(employee, sprintData, maxAvailability),maxAvailability)
         }
       }
-      Ok(views.html.components.sprintpanel(sprintId, storyPoints(sprintData),  employeeCapacity))
+      Ok(views.html.components.sprintpanel(sprintId, storyPoints(sprintData), employeeCapacity))
     } else NotFound
   }
 
@@ -63,7 +63,6 @@ object Sprints extends Controller {
         case Some(v) => castToJsNumber(v \ "availability").value.toInt
         case None => maximum
       }
-
     } catch {
       case e:NumberFormatException => maximum
     }
@@ -89,8 +88,10 @@ object Sprints extends Controller {
   }
 
 
-  def saveSprintData(sprintId: String) = Action(parse.json) { implicit request =>
-    Ok("aqq")
+  def saveSprintData(sprintId: String) = Action(parse.json) { implicit request => {
+      sprintsDao.saveSprintData(sprintId, request.body)
+      Ok(views.html.sprints())
+    }
   }
 
   def mainPage = Action { implicit request => {

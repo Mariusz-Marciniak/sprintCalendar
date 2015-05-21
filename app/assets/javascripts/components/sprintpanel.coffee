@@ -1,7 +1,7 @@
 root = exports ? this
 
 
-$("#saveBtn").click ->
+$("#saveSprintDataBtn").click ->
   $("#success-bar").hide()
   $("#error-bar").hide()
   $.ajax
@@ -15,6 +15,13 @@ $("#saveBtn").click ->
     error: sc_main.onError
 
 prepareData = () ->
-  '{ "amountOfSp":"'+$("#storyPoints").prop("value")
-  +'""'
-  +'"}'
+  sprintTxt = '{ "storyPoints":'+$("#storyPoints").prop("value")
+  sprintTxt += ',"workload": ['
+  $.each($("paper-slider"),
+    (index, component) ->
+      if(index > 0)
+        sprintTxt += ','
+      sprintTxt += '{"employee":"'+sc_main.escape(null, component.getAttribute("id"))+'","availability":'+component.value+'}'
+  )
+  sprintTxt += ']}'
+  sprintTxt

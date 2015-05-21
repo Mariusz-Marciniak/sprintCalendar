@@ -6,14 +6,14 @@
 
 <div class="container">
     <h3>@sprintName</h3>
-    <core-icon-button class="inner-save-btn" id="saveBtn" icon="save"><span>Save</span></core-icon-button>
+    <core-icon-button class="inner-save-btn" id="saveSprintDataBtn" icon="save"><span>Save</span></core-icon-button>
 
     <paper-input id="storyPoints" label="Total amount of story point" value="@storyPoints" floatingLabel></paper-input>
 
     @for(entry <- employeeCapacity) {
         <div>
             <div>@entry._1</div>
-            <div><paper-slider id="" class="full-view" min="0" value="@entry._2" max="@entry._3" editable></paper-slider></div>
+            <div><paper-slider id="@entry._1" class="full-view" min="0" value="@entry._2" max="@entry._3" editable></paper-slider></div>
         </div>
     }
 </div>
