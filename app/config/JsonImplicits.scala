@@ -78,5 +78,30 @@ class JsArrayWrapper(_jsArray: JsArray) {
 
   final def findRow(key : String, value: String) : Option[JsValue] = findRow(key, JsString(value))
 
+  final def filter(f: JsValue => Boolean) : Seq[JsValue] = {
+    def check(index: Int, agg: Seq[JsValue]) : Seq[JsValue] = {
+      val jsValue = jsArray(index)
+      jsValue match {
+        case _:JsUndefined => agg
+        case v: JsValue => {
+          if(f(jsValue))
+            check(index+1, agg :+ jsValue)
+          else
+            check(index+1, agg)
+        }
+      }
+    }
+    check(0, Seq())
+  }
+
+  lazy val size: Int = {
+    def inc(index: Int) : Int = {
+      jsArray(index) match {
+        case _:JsUndefined => index
+        case v: JsValue => inc(index+1)
+      }
+    }
+    inc(0)
+  }
 }
 

@@ -1,17 +1,12 @@
 package entities
 
 import com.github.nscala_time.time.Imports._
-import entities.WorkingDays.{Dates, Holidays}
 import org.joda.time.{DateTimeFieldType, ReadablePartial}
 import play.api.libs.json._
 
 object WorkingDays {
 
   import config.JsonImplicits._
-
-  type Holidays = Seq[ReadablePartial]
-  type Dates = Seq[LocalDate]
-
   val DaysNames = List("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
 
   def holidaysFromJsArray(holidays: JsArray): Holidays = {
@@ -149,7 +144,3 @@ case class WorkingDays(dates: Dates) {
   }
 }
 
-case class DateRange(fromDate:LocalDate, toDate: LocalDate) {
-  def notContains(date: LocalDate): Boolean = fromDate.isAfter(date) || toDate.isBefore(date)
-  def contains(date: LocalDate): Boolean = !notContains(date)
-}

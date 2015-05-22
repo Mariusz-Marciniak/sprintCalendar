@@ -30,6 +30,12 @@ class InMemorySettingsDao extends SettingsDao {
       ("name",JsString("Sprint 1")),
       ("from",JsString("2015-12-14")),
       ("to",JsString("2016-01-01"))
+    )),
+    JsObject(Seq(
+      ("label",JsString("Sprint 2 2016-01-02::2016-01-18")),
+      ("name",JsString("Sprint 2")),
+      ("from",JsString("2016-01-02")),
+      ("to",JsString("2016-01-18"))
     ))
   ))
 
