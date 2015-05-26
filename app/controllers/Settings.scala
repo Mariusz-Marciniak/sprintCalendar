@@ -1,7 +1,8 @@
 package controllers
 
+import dao.SettingsDao
 import play.api.Routes
-import play.api.libs.json.{JsObject, Json, JsArray, JsValue}
+import play.api.libs.json.JsArray
 import play.api.mvc.{Action, Controller};
 
 
@@ -41,7 +42,7 @@ object Settings extends Controller {
   }
 
   def dayAndPrecisionOptions = Action { implicit request =>
-    Ok(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
+    Ok(settingsDao.loadDayAndPrecision.getOrElse(SettingsDao.DefaultDaysAndPrecisionOptions))
   }
 
   def mainPage = Action { implicit request =>

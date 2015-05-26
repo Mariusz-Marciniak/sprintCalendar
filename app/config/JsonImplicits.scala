@@ -18,6 +18,13 @@ object JsonImplicits {
     }
   }
 
+  implicit def castToJsBoolean(value: Any): JsBoolean = {
+    value match {
+      case v: JsBoolean => v
+      case _ => JsBoolean(false)
+    }
+  }
+
   implicit def castToJsObject(value: Any): JsObject = {
     value match {
       case v: JsObject => v
@@ -92,6 +99,22 @@ class JsArrayWrapper(_jsArray: JsArray) {
       }
     }
     check(0, Seq())
+  }
+
+  final def count(f: JsValue => Boolean) : Int = {
+    def check(index: Int, sum: Int) : Int = {
+      val jsValue = jsArray(index)
+      jsValue match {
+        case _:JsUndefined => sum
+        case v: JsValue => {
+          if(f(jsValue))
+            check(index+1, sum + 1)
+          else
+            check(index+1, sum)
+        }
+      }
+    }
+    check(0, 0)
   }
 
   lazy val size: Int = {

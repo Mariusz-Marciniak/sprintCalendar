@@ -39,7 +39,7 @@ class InMemorySettingsDao extends SettingsDao {
     ))
   ))
 
-  private var dayAndPrecision: JsObject = DefaultDaysAndPrecisionOptions
+  private var dayAndPrecision: JsObject = SettingsDao.DefaultDaysAndPrecisionOptions
 
   override def saveEmployees(employees: JsValue): Try[JsValue] = {
     println(s"saving employees: $employees")

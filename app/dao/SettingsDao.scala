@@ -5,8 +5,7 @@ import play.api.libs.json.{Json, JsObject, JsValue}
 
 import scala.util.Try
 
-trait SettingsDao {
-
+object SettingsDao {
   val DefaultDaysAndPrecisionOptions: JsObject = Json.obj(
     "workdays" -> Json.obj(
       WorkingDays.DaysNames(0) -> false,
@@ -20,8 +19,9 @@ trait SettingsDao {
       "type" -> "days"
     )
   )
+}
 
-
+trait SettingsDao {
   def saveEmployees(employees: JsValue): Try[JsValue]
   def loadEmployees: Try[JsValue]
   def loadEmployeesNames: Seq[String]

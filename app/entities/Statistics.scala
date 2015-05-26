@@ -1,9 +1,11 @@
 package entities
 
-import config.{InMemoryConfiguration, Configuration}
+import config.Configuration
 import config.JsonImplicits._
 import org.joda.time.LocalDate
-import play.api.libs.json.{JsValue, JsArray}
+import play.api.libs.json.{JsObject, JsValue, JsArray}
+
+import scala.math.BigDecimal.RoundingMode
 
 
 object Statistics {
@@ -19,19 +21,41 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
     v => castToJsString(v \ "label").value
   )
 
+  lazy val amountOfWorkdaysInWeek : Int = {
+    val workdays: JsObject = config.settingsDao.loadDayAndPrecision.getOrElse(dao.SettingsDao.DefaultDaysAndPrecisionOptions) \ "workdays"
+    (for {
+      day <- WorkingDays.DaysNames
+      if(castToJsBoolean(workdays \ day).value)
+    } yield 1).sum
+  }
+
   lazy val calculateVelocities: Seq[VelocityEntry] = {
-    ???
+    sprints map (jsValue => {
+      val sprintName: String = castToJsString(jsValue \ "label").value
+      val sprintData: JsObject = config.sprintsDao.loadSprintData(sprintName).get
+      val storyPoints: BigDecimal = castToJsNumber(sprintData \ "storyPoints").value
+      val unitsInSprint: BigDecimal = BigDecimal(totalUnitsInSprint(sprintName))
+      if("hours".equals(castToJsString(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "type").value)) {
+        val perHour = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
+        val perDay = (perHour * castToJsNumber(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "perDay").value).setScale(2,RoundingMode.HALF_UP)
+        val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
+        VelocityEntry(sprintName, Some(perHour), perDay, perWeek)
+      } else {
+        val perDay = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
+        val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
+        VelocityEntry(sprintName, None, perDay, perWeek)
+      }
+    })
   }
 
-  def totalUnitsInSprint: Int = {
-    def sumAvailabilities(sprintData: JsArray) : Int = {
-      sprintData map (v => castToJsNumber(v \ "availability").value.toInt) sum
-    }
 
-    sprints.foldLeft(0) { (sum, jsValue) =>
-      sum + sumAvailabilities(castToJsArray(config.sprintsDao.loadSprintData(castToJsString(jsValue \ "label").value).get))
-    }
+  def totalUnitsInSprint(sprintId: String): Int = {
+    if(sprintsNames.contains(sprintId))
+      castToJsArray(castToJsObject(config.sprintsDao.loadSprintData(sprintId).get) \ "workload").map(v => castToJsNumber(v \ "availability").value.toInt).sum
+    else
+      0
   }
+
 }
 
-case class VelocityEntry(name: String, perHour: Double, perDay: Double, perWeek: Double)
+case class VelocityEntry(name: String, perHour: Option[BigDecimal], perDay: BigDecimal, perWeek: BigDecimal)

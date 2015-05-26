@@ -22,5 +22,8 @@
     "paper-checkbox": "Polymer/paper-checkbox#^0.5",
     "paper-radio-button": "Polymer/paper-radio-button#^0.5",
     "paper-slider": "Polymer/paper-slider#^0.5"
+  },
+  "resolutions": {
+    "webcomponentsjs": "~0.5.5"
   }
 }

@@ -9,10 +9,16 @@ class InMemorySprintsDao extends SprintsDao {
 
   private var sprints: Map[String, JsValue] = Map(
     "Sprint 1 2015-12-14::2016-01-01"->Json.obj(
-      "storyPoints" -> 96,
+      "storyPoints" -> 133,
       "workload" -> Json.arr(
         Json.obj("employee"->"Thomas", "availability"->10),
         Json.obj("employee"->"Mary", "availability"->2)
+      )
+    ),
+    "Sprint 2 2016-01-02::2016-01-18"->Json.obj(
+      "storyPoints" -> 78,
+      "workload" -> Json.arr(
+        Json.obj("employee"->"Mary", "availability"->8)
       )
     )
   )

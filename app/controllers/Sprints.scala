@@ -1,11 +1,11 @@
 package controllers
 
-import entities.WorkingDays
+import com.github.nscala_time.time.Imports._
+import dao.SettingsDao
+import entities.{DateRange, WorkingDays}
 import play.api.Routes
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
-import com.github.nscala_time.time.Imports._
-import entities.DateRange
 
 object Sprints extends Controller {
 
@@ -69,7 +69,7 @@ object Sprints extends Controller {
   }
 
   private def hoursMultiplier: Int = {
-    val settings = settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions)
+    val settings = settingsDao.loadDayAndPrecision.getOrElse(SettingsDao.DefaultDaysAndPrecisionOptions)
     val precisionType = castToJsString(settings \ "precision" \ "type")
     if("hours".equals(precisionType.value))
       castToJsString(settings \ "precision" \ "perDay").value.toInt
@@ -81,7 +81,7 @@ object Sprints extends Controller {
     import entities.WorkingDays._
     workdaysInRange(
       range,
-      workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(settingsDao.DefaultDaysAndPrecisionOptions))
+      workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(SettingsDao.DefaultDaysAndPrecisionOptions))
     ) filterHolidays(
       holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),range)
     )
