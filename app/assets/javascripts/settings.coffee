@@ -81,6 +81,7 @@ root.sc_settings =
 
 root.employee_editbox =
   convert : (txt) ->
+    txt = txt.trim()
     JSON.parse('{"label":"'+txt+'","name":"'+txt+'"}')
 
 root.holiday_editbox =
@@ -106,7 +107,7 @@ root.holiday_editbox =
     dates = txt.match(datePattern)
     dateStr = dates[dates.length-1]
     name = pattern.exec(txt.substring(0,txt.length - dateStr.length))
-    JSON.parse('{"label":"'+txt+'","name":"'+name+'","date":"'+dateStr+'"}')
+    JSON.parse('{"label":"'+txt.trim()+'","name":"'+name+'","date":"'+dateStr+'"}')
 
 root.sprint_editbox =
   validate : (txt) ->
@@ -131,9 +132,10 @@ root.sprint_editbox =
     else
       "Please enter sprint name followed by period yyyy-mm-dd::yyyy-mm-dd"
   convert : (txt) ->
-    datesPattern = /\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
+    txt = txt.trim()
+    datesPattern = /\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}$/
     datesPart = datesPattern.exec(txt)
-    namePart = txt.substring(0, txt.length-datesPart[0].length).trim()
+    namePart = txt.substring(0, txt.length-datesPart[0].length)
     dates = datesPart[0].split("::")
-    JSON.parse('{"label":"'+txt+'","name":"'+namePart+'","from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
+    JSON.parse('{"label":"'+txt+'","name":"'+namePart+'","from":"'+dates[0]+'","to":"'+dates[1]+'"}')
 

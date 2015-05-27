@@ -16,12 +16,12 @@ object WorkingDays {
       if(dateParts.length > 2)
         new Partial(
           Array(DateTimeFieldType.year(), DateTimeFieldType.monthOfYear(), DateTimeFieldType.dayOfMonth()),
-          Array(dateParts(0).toInt,dateParts(1).toInt,dateParts(2).toInt)
+          Array(dateParts(0).trim.toInt,dateParts(1).trim.toInt,dateParts(2).trim.toInt)
         )
       else
         new Partial(
           Array(DateTimeFieldType.monthOfYear(), DateTimeFieldType.dayOfMonth()),
-          Array(dateParts(0).toInt,dateParts(1).toInt)
+          Array(dateParts(0).trim.toInt,dateParts(1).trim.toInt)
         )
     })
   }

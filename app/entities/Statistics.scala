@@ -9,10 +9,14 @@ import scala.math.BigDecimal.RoundingMode
 
 
 object Statistics {
+  private val Zero = BigDecimal("0.00")
+
   def apply(range:DateRange)(implicit config:Configuration): Statistics = new Statistics(range)(config)
+
 }
 
 class Statistics(range: DateRange)(implicit config: Configuration) {
+
   lazy val sprints: Seq[JsValue] = castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).filter(
     jsValue=> DateRange(LocalDate.parse(castToJsString(jsValue \ "from").value),LocalDate.parse(castToJsString(jsValue \ "to").value)).in(range)
   )
@@ -29,12 +33,15 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
     } yield 1).sum
   }
 
-  lazy val calculateVelocities: Seq[VelocityEntry] = {
-    sprints map (jsValue => {
+
+  lazy val calculateVelocities: Seq[VelocityEntry] = calculateVelocitiesFor(sprints)
+
+  private def calculateVelocitiesFor(sprintsData: Seq[JsValue]): Seq[VelocityEntry] = {
+    sprintsData map (jsValue => {
       val sprintName: String = castToJsString(jsValue \ "label").value
       val sprintData: JsObject = config.sprintsDao.loadSprintData(sprintName).get
       val storyPoints: BigDecimal = castToJsNumber(sprintData \ "storyPoints").value
-      val unitsInSprint: BigDecimal = BigDecimal(totalUnitsInSprint(sprintName))
+      val unitsInSprint: BigDecimal = totalUnitsInSprint(sprintName)
       if("hours".equals(castToJsString(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "type").value)) {
         val perHour = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
         val perDay = (perHour * castToJsNumber(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "perDay").value).setScale(2,RoundingMode.HALF_UP)
@@ -48,12 +55,36 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
     })
   }
 
+  lazy val totalVelocity: VelocityEntry = avgVelocities(calculateVelocities, "Total velocity")
 
-  def totalUnitsInSprint(sprintId: String): Int = {
+  lazy val globalVelocity: VelocityEntry =
+    avgVelocities(calculateVelocitiesFor(castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).map(v => v)), "Global velocity")
+
+  private def avgVelocities(velocities: Seq[VelocityEntry], label: String): VelocityEntry = {
+    import Statistics.Zero
+    if(velocities.size > 0) {
+      val perHourSum: Option[BigDecimal] = velocities.map(_.perHour).reduceLeft(
+        (sum, opt) => opt match {
+          case Some(v) => Some(sum.getOrElse(Zero) + v)
+          case None => None
+        }
+      )
+      VelocityEntry(label,
+        perHourSum map (_ / velocities.size setScale(2, RoundingMode.HALF_UP)),
+        (velocities.map(_.perDay).sum / velocities.size).setScale(2, RoundingMode.HALF_UP),
+        (velocities.map(_.perWeek).sum / velocities.size).setScale(2, RoundingMode.HALF_UP))
+    } else {
+      VelocityEntry(label, None, Zero, Zero)
+    }
+  }
+
+
+
+  def totalUnitsInSprint(sprintId: String): BigDecimal = {
     if(sprintsNames.contains(sprintId))
-      castToJsArray(castToJsObject(config.sprintsDao.loadSprintData(sprintId).get) \ "workload").map(v => castToJsNumber(v \ "availability").value.toInt).sum
+      castToJsArray(castToJsObject(config.sprintsDao.loadSprintData(sprintId).get) \ "workload").map(v => castToJsNumber(v \ "availability").value).sum
     else
-      0
+      Statistics.Zero
   }
 
 }

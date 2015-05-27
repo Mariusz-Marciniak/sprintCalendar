@@ -88,6 +88,33 @@ class StatisticsSpec extends Specification {
     }
   }
 
+  "totalVelocity" should {
+    "return summary with zeros when no sprint is in range" in {
+      val expectedVelocity = VelocityEntry("Total velocity",None,BigDecimal("0.00"),BigDecimal("0.00"))
+
+      val total = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2015-12-31"))).totalVelocity
+
+      total must beEqualTo(expectedVelocity)
+    }
+
+    "return average from all sprints for days precision" in {
+      val expectedVelocity = VelocityEntry("Total velocity",None,BigDecimal("10.42"),BigDecimal("52.08"))
+
+      val total = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-20"))).totalVelocity
+
+      total must beEqualTo(expectedVelocity)
+    }
+
+    "return average from all sprints for hours precision" in {
+      val expectedVelocity = VelocityEntry("Total velocity",Some(BigDecimal("10.42")),BigDecimal("41.66"),BigDecimal("208.30"))
+
+      val total = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-20")))(InMemoryHoursPecisionConfiguration).totalVelocity
+
+      total must beEqualTo(expectedVelocity)
+    }
+
+  }
+
 }
 
 object EmptyConfig extends config.Configuration {
