@@ -78,13 +78,8 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
     }
   }
 
-
-
-  def totalUnitsInSprint(sprintId: String): BigDecimal = {
-    if(sprintsNames.contains(sprintId))
+  private[entities] def totalUnitsInSprint(sprintId: String): BigDecimal = {
       castToJsArray(castToJsObject(config.sprintsDao.loadSprintData(sprintId).get) \ "workload").map(v => castToJsNumber(v \ "availability").value).sum
-    else
-      Statistics.Zero
   }
 
 }

@@ -1,14 +1,15 @@
+package entities
+
+import com.github.nscala_time.time.Imports._
 import config.InMemoryConfiguration
 import dao.SettingsDao
-import dao.memory.{InMemorySprintsDao, InMemoryUserDefaultsDao, InMemoryVacationsDao, InMemorySettingsDao}
+import dao.memory.{InMemorySettingsDao, InMemorySprintsDao, InMemoryUserDefaultsDao, InMemoryVacationsDao}
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
-import com.github.nscala_time.time.Imports._
-import entities.{WorkingDays, VelocityEntry, Statistics, DateRange}
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 
-import scala.util.{Success, Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 
 @RunWith(classOf[JUnitRunner])
@@ -43,11 +44,8 @@ class StatisticsSpec extends Specification {
   }
 
   "totalUnitsInSprint" should {
-    "return zero when sprint is not in scope" in {
-      Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2015-12-31"))).totalUnitsInSprint("Sprint 1 2015-12-14::2016-01-01") must beEqualTo(0)
-    }
-    "return sum of availabilities in chosen sprint" in {
-      Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-05"))).totalUnitsInSprint("Sprint 1 2015-12-14::2016-01-01") must beEqualTo(12)
+    "return sum of availabilities in chosen sprint no matter what is statistics range" in {
+      Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2015-01-05"))).totalUnitsInSprint("Sprint 1 2015-12-14::2016-01-01") must beEqualTo(12)
     }
   }
 
@@ -111,6 +109,29 @@ class StatisticsSpec extends Specification {
       val total = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-20")))(InMemoryHoursPecisionConfiguration).totalVelocity
 
       total must beEqualTo(expectedVelocity)
+    }
+
+  }
+
+  "globalVelocity" should {
+    "be the same no matter what range statistics are using" in {
+      val globalEmptyRange = Statistics(DateRange(LocalDate.parse("2011-12-13"), LocalDate.parse("2012-12-31"))).globalVelocity
+      val globalIncorrectRange = Statistics(DateRange(LocalDate.parse("2016-12-13"), LocalDate.parse("2015-12-31"))).globalVelocity
+      val globalRangeWithOneSprint = Statistics(DateRange(LocalDate.parse("2011-12-13"), LocalDate.parse("2016-01-01"))).globalVelocity
+      val globalRangeWithAllSprints = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).globalVelocity
+
+      globalEmptyRange must beEqualTo(globalIncorrectRange)
+      globalEmptyRange must beEqualTo(globalRangeWithOneSprint)
+      globalEmptyRange must beEqualTo(globalRangeWithAllSprints)
+    }
+    "be the same (expect label) as total velocity for all sprints" in {
+      val expectedVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).totalVelocity
+
+      val globalVelocity = Statistics(DateRange(LocalDate.parse("2011-12-13"), LocalDate.parse("2012-12-31"))).globalVelocity
+
+      globalVelocity.perHour must beEqualTo(expectedVelocity.perHour)
+      globalVelocity.perDay must beEqualTo(expectedVelocity.perDay)
+      globalVelocity.perWeek must beEqualTo(expectedVelocity.perWeek)
     }
 
   }

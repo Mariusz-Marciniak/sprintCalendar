@@ -1,10 +1,11 @@
+package entities
+
+import com.github.nscala_time.time.Imports._
+import org.joda.time.{DateTimeFieldType, Days}
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
-import play.api.libs.json.{Json, JsArray}
-import org.joda.time.{Days, DateTimeFieldType}
-import com.github.nscala_time.time.Imports._
-import entities.DateRange
+import play.api.libs.json.{JsArray, Json}
 
 
 @RunWith(classOf[JUnitRunner])
