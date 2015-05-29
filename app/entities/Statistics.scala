@@ -17,6 +17,9 @@ object Statistics {
 
 class Statistics(range: DateRange)(implicit config: Configuration) {
 
+  val fromDate = range.fromDate
+  val toDate = range.toDate
+
   lazy val sprints: Seq[JsValue] = castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).filter(
     jsValue=> DateRange(LocalDate.parse(castToJsString(jsValue \ "from").value),LocalDate.parse(castToJsString(jsValue \ "to").value)).in(range)
   )

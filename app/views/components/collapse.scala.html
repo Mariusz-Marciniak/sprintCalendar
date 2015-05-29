@@ -1,0 +1,13 @@
+@(id: String, header: String)(content: Html)
+
+<link rel="import" href="@routes.Assets.at("bower_components/core-collapse/core-collapse.html")" />
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/components/collapse.css")" >
+
+<div class="collapse-panel">
+    <div class="heading" onclick="document.querySelector('#@id').toggle();">@header</div>
+    <core-collapse id="@id">
+        <div class="content">
+            @content
+        </div>
+    </core-collapse>
+</div>

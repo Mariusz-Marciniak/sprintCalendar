@@ -6,7 +6,6 @@ import dao.{SprintsDao, UserDefaultsDao, SettingsDao, VacationsDao}
 import org.joda.time.format.DateTimeFormat
 
 trait Configuration {
-  val AppDateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
   val settingsDao: SettingsDao
   val vacationsDao: VacationsDao
   val userDefaultsDao: UserDefaultsDao
@@ -14,6 +13,7 @@ trait Configuration {
 }
 
 object Configuration {
+  val AppDateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
   implicit val configuration = FileConfiguration
 }
 

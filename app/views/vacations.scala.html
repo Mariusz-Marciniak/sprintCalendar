@@ -7,7 +7,7 @@
 
     <div horizontal justified layout wrap>
         @employees.map { case employee =>
-            @views.html.components.listbox("vacationsOf"+employee,employee+"'s vacations", validation="vacation_editbox.validate", conversion="vacation_editbox.convert")
+            @components.listbox("vacationsOf"+employee,employee+"'s vacations", validation="vacation_editbox.validate", conversion="vacation_editbox.convert")
         }
     </div>
 

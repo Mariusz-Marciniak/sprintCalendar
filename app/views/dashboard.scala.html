@@ -1,4 +1,4 @@
-@(fromDate: String, toDate: String)
+@(stats: entities.Statistics)
 
 @main("Dashboard",0) {
     <link rel="import" href="@routes.Assets.at("bower_components/mm.webcomponents/timeline/timeline.html")" />
@@ -9,17 +9,28 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/dashboard.css")">
 
     <div class="timeline-panel">
-        <timeline-panel id="dashboard-timeline" fromDate="@fromDate" toDate="@toDate" selection="single">
+        <timeline-panel id="dashboard-timeline" fromDate="@stats.fromDate" toDate="@stats.toDate" selection="none">
         </timeline-panel>
     </div>
     <div class="top-margin-panel">
         <br/>Timeline range:<br/>
         <div>
-            <paper-input id="fromDate" label="from date" value="@fromDate" floatingLabel></paper-input>
-            <paper-input id="toDate" label="to date" value="@toDate" floatingLabel></paper-input>
+            <paper-input id="fromDate" label="from date" value="@stats.fromDate" floatingLabel></paper-input>
+            <paper-input id="toDate" label="to date" value="@stats.toDate" floatingLabel></paper-input>
             <paper-icon-button icon="refresh" onclick="sc_dashboard.refreshTimeline();"></paper-icon-button>
         </div>
     </div>
+    @components.collapse("statsummary", "Statistics summary") {
+        Enclosed sprints:<br/>
+        @for(name <- stats.sprintsNames) {
+            &nbsp;&nbsp;@name <br/>
+        }
 
+    }
+    @components.velocitypanel(stats.globalVelocity)
+
+    @components.velocitypanel(stats.totalVelocity)
+
+    @stats.calculateVelocities.map(components.velocitypanel(_))
 }
 

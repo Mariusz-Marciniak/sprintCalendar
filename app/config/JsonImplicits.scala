@@ -35,6 +35,13 @@ object JsonImplicits {
   implicit def castToJsNumber(value: Any): JsNumber = {
     value match {
       case v: JsNumber => v
+      case s: JsString => {
+        try {
+          JsNumber(s.value.toInt)
+        } catch {
+          case _:NumberFormatException => JsNumber(0)
+        }
+      }
       case _ => JsNumber(0)
     }
   }

@@ -9,9 +9,9 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/settings.css")" >
     <div class="settings-container">
         <div horizontal justified layout wrap>
-            @views.html.components.listbox("employees", "Employees", conversion = "employee_editbox.convert")
-            @views.html.components.listbox("holidays", "Holidays", validation = "holiday_editbox.validate", conversion = "holiday_editbox.convert")
-            @views.html.components.listbox("sprints", "Sprints", validation = "sprint_editbox.validate", conversion = "sprint_editbox.convert")
+            @components.listbox("employees", "Employees", conversion = "employee_editbox.convert")
+            @components.listbox("holidays", "Holidays", validation = "holiday_editbox.validate", conversion = "holiday_editbox.convert")
+            @components.listbox("sprints", "Sprints", validation = "sprint_editbox.validate", conversion = "sprint_editbox.convert")
         </div>
         <div class="time-options-panel">
             <div class="time-options-section">

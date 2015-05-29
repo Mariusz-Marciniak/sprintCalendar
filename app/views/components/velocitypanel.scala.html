@@ -1,0 +1,8 @@
+@(entry: entities.VelocityEntry)
+
+@components.collapse(entry.name.replaceAll("[\\s\\.:-]","").replaceAll("^\\d+","").toLowerCase, entry.name) {
+    Per hour: @entry.perHour
+    Per day: @entry.perDay
+    Per week: @entry.perWeek
+}
+

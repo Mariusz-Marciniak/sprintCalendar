@@ -3,6 +3,9 @@ root = exports ? this
 $ ->
   dashboardJsRoutes.controllers.Dashboard.timelineData().ajax(sc_main.fillRowsAjaxCall($( '#dashboard-timeline' )))
 
+  $("#dashboard-timeline").on("clicked", (e) ->
+    alert(JSON.stringify(e.originalEvent.detail.entry))
+  )
 
 root.sc_dashboard =
   refreshTimeline: () ->
@@ -21,8 +24,5 @@ root.sc_dashboard =
       sc_main.showMessageBar($("#error-bar"), "End of timeline should occur after beginning")
       false
      else
-      $('#dashboard-timeline').attr("fromdate",strFrom)
-      $('#dashboard-timeline').attr("todate",strTo)
-      $('#dashboard-timeline').get(0).refresh()
-      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax()
+      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax().always(location.reload())
       true

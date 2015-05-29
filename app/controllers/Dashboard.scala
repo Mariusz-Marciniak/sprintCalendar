@@ -1,6 +1,6 @@
 package controllers
 
-import entities.UserDefaults
+import entities.{DateRange, Statistics, UserDefaults}
 import play.api.Routes
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
@@ -47,7 +47,8 @@ object Dashboard extends Controller {
 
   def mainPage = Action {
     val defaults = loadDefaults()
-    Ok(views.html.dashboard(defaults.timelineDateFrom, defaults.timelineDateTo))
+    val range = DateRange(AppDateFormatter.parseLocalDate(defaults.timelineDateFrom), AppDateFormatter.parseLocalDate(defaults.timelineDateTo))
+    Ok(views.html.dashboard(Statistics(range)))
   }
 
 }
