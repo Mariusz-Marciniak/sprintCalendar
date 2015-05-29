@@ -1,10 +1,14 @@
 root = exports ? this
 
 $ ->
-  dashboardJsRoutes.controllers.Dashboard.timelineData().ajax(sc_main.fillRowsAjaxCall($( '#dashboard-timeline' )))
+  dashboardJsRoutes.controllers.Dashboard.timelineData().ajax(sc_main.fillRowsAjaxCall($('#dashboard-timeline')))
+
+  $("#vacation-info").hide()
 
   $("#dashboard-timeline").on("clicked", (e) ->
-    alert(JSON.stringify(e.originalEvent.detail.entry))
+    $("#vacation-info").css("top",e.originalEvent.detail.screenY)
+    $("#vacation-info").css("left",e.originalEvent.detail.screenX)
+    $("#vacation-info").show()
   )
 
 root.sc_dashboard =
