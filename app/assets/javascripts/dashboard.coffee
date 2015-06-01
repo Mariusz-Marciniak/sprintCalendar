@@ -6,9 +6,12 @@ $ ->
   $("#vacation-info").hide()
 
   $("#dashboard-timeline").on("clicked", (e) ->
-    $("#vacation-info").css("top",e.originalEvent.detail.screenY)
-    $("#vacation-info").css("left",e.originalEvent.detail.screenX)
-    $("#vacation-info").show()
+    vi = $("#vacation-info")
+    details = e.originalEvent.detail
+    vi.css("top",details.clientY + $(document).scrollTop())
+    vi.css("left",details.clientX + $(document).scrollLeft())
+    vi.html(details.entry.employee+"&nbsp;&nbsp;&nbsp;"+details.entry.label)
+    vi.show()
   )
 
 root.sc_dashboard =

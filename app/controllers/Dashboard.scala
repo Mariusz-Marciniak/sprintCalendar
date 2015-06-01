@@ -39,7 +39,7 @@ object Dashboard extends Controller {
       val entries: JsArray = vacationsDao.loadVacations(employee).getOrElse(JsArray())
       timelines += Json.obj(
         "label" -> employee,
-        "entries" -> entries
+        "entries" -> entries.map(entry => entry + ("employee" -> Json.toJson(employee)))
       )
     }
     Ok(Json.toJson(timelines));
