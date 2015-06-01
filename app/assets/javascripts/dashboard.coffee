@@ -6,15 +6,22 @@ $ ->
   $("#vacation-info").hide()
 
   $("#dashboard-timeline").on("clicked", (e) ->
+    if(sc_dashboard.hintTimeout != undefined)
+      clearTimeout(sc_dashboard.hintTimeout)
     vi = $("#vacation-info")
     details = e.originalEvent.detail
     vi.css("top",details.clientY + $(document).scrollTop())
     vi.css("left",details.clientX + $(document).scrollLeft())
     vi.html(details.entry.employee+"&nbsp;&nbsp;&nbsp;"+details.entry.label)
-    vi.show()
+    vi.show(0, ()->
+      sc_dashboard.hintTimeout = setTimeout ( =>
+        $(@).hide()
+      ), 5000
+    )
   )
 
 root.sc_dashboard =
+  hintTimeout: undefined,
   refreshTimeline: () ->
     strFrom = $('#fromDate').prop('value')
     strTo = $('#toDate').prop('value')
