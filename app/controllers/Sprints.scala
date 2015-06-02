@@ -2,7 +2,7 @@ package controllers
 
 import com.github.nscala_time.time.Imports._
 import dao.SettingsDao
-import entities.{DateRange, WorkingDays}
+import entities.{EmployeeInSprint, DateRange, WorkingDays}
 import play.api.Routes
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
@@ -42,7 +42,7 @@ object Sprints extends Controller {
             vacationsFromJsArray(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
           ).dates.size * multiplier
 
-          (employee,availability(employee, sprintData, maxAvailability),maxAvailability)
+          EmployeeInSprint(employee,availability(employee, sprintData, maxAvailability),maxAvailability, 0)
         }
       }
       Ok(views.html.components.sprintpanel(sprintId, storyPoints(sprintData), employeeCapacity))

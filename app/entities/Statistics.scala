@@ -39,23 +39,24 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
 
   lazy val calculateVelocities: Seq[VelocityEntry] = calculateVelocitiesFor(sprints)
 
-  private def calculateVelocitiesFor(sprintsData: Seq[JsValue]): Seq[VelocityEntry] = {
-    sprintsData map (jsValue => {
-      val sprintName: String = castToJsString(jsValue \ "label").value
-      val sprintData: JsObject = config.sprintsDao.loadSprintData(sprintName).get
-      val storyPoints: BigDecimal = castToJsNumber(sprintData \ "storyPoints").value
-      val unitsInSprint: BigDecimal = totalUnitsInSprint(sprintName)
-      if("hours".equals(castToJsString(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "type").value)) {
-        val perHour = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
-        val perDay = (perHour * castToJsNumber(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "perDay").value).setScale(2,RoundingMode.HALF_UP)
-        val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
-        VelocityEntry(sprintName, Some(perHour), perDay, perWeek)
-      } else {
-        val perDay = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
-        val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
-        VelocityEntry(sprintName, None, perDay, perWeek)
-      }
-    })
+  private def calculateVelocitiesFor(sprints: Seq[JsValue]): Seq[VelocityEntry] = {
+    sprints map (sprint => calculateVelocitiesFor(castToJsString(sprint \ "label").value))
+  }
+
+  private def calculateVelocitiesFor(sprintName: String): VelocityEntry = {
+    val sprintData: JsObject = config.sprintsDao.loadSprintData(sprintName).get
+    val unitsInSprint: BigDecimal = totalUnitsInSprint(sprintData)
+    val storyPoints: BigDecimal = castToJsNumber(sprintData \ "storyPoints").value
+    if("hours".equals(castToJsString(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "type").value)) {
+      val perHour = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
+      val perDay = (perHour * castToJsNumber(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "perDay").value).setScale(2,RoundingMode.HALF_UP)
+      val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
+      VelocityEntry(sprintName, Some(perHour), perDay, perWeek)
+    } else {
+      val perDay = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
+      val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
+      VelocityEntry(sprintName, None, perDay, perWeek)
+    }
   }
 
   lazy val totalVelocity: VelocityEntry = avgVelocities(calculateVelocities, "Total velocity")
@@ -81,8 +82,23 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
     }
   }
 
-  private[entities] def totalUnitsInSprint(sprintId: String): BigDecimal = {
-      castToJsArray(castToJsObject(config.sprintsDao.loadSprintData(sprintId).get) \ "workload").map(v => castToJsNumber(v \ "availability").value).sum
+  private[entities] def totalUnitsInSprint(sprintData: JsObject): BigDecimal = {
+      castToJsArray(sprintData \ "workload").map(v => castToJsNumber(v \ "availability").value).sum
+  }
+
+  def employeeVelocity(employeeName: String) : VelocityEntry ={
+    avgVelocities(
+      calculateVelocitiesFor(
+        castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).filter(s => {
+          val sprintName: String = castToJsString(s \ "label").value
+          val sprintData = config.sprintsDao.loadSprintData(sprintName).get
+          val workload: JsArray = sprintData \ "workload"
+          workload.findRow("employee",employeeName) match {
+            case Some(row) => castToJsNumber(row \ "availability").value > 0
+            case None => false
+          }
+        })
+      ), s"$employeeName velocity")
   }
 
 }

@@ -7,7 +7,7 @@ import dao.memory.{InMemorySettingsDao, InMemorySprintsDao, InMemoryUserDefaults
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 
 import scala.util.{Failure, Success, Try}
 
@@ -15,7 +15,8 @@ import scala.util.{Failure, Success, Try}
 @RunWith(classOf[JUnitRunner])
 class StatisticsSpec extends Specification {
 
-  implicit val config = InMemoryConfiguration
+  import config.JsonImplicits._
+  implicit val conf = InMemoryConfiguration
 
   "sprintsNames" should {
     "return empty list when no sprint is enclosed in statistics range" in {
@@ -45,7 +46,8 @@ class StatisticsSpec extends Specification {
 
   "totalUnitsInSprint" should {
     "return sum of availabilities in chosen sprint no matter what is statistics range" in {
-      Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2015-01-05"))).totalUnitsInSprint("Sprint 1 2015-12-14::2016-01-01") must beEqualTo(12)
+      val sprintData: JsObject = conf.sprintsDao.loadSprintData("Sprint 1 2015-12-14::2016-01-01").get
+      Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2015-01-05"))).totalUnitsInSprint(sprintData) must beEqualTo(12)
     }
   }
 
@@ -134,6 +136,32 @@ class StatisticsSpec extends Specification {
       globalVelocity.perWeek must beEqualTo(expectedVelocity.perWeek)
     }
 
+  }
+
+  "employeeVelocity" should {
+    "count velocity as average for sprints in which employee participated" in {
+      val expectedMaryVelocity = VelocityEntry("Mary velocity",None,BigDecimal("10.42"),BigDecimal("52.08"))
+      val maryVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).employeeVelocity("Mary")
+      maryVelocity must beEqualTo(expectedMaryVelocity)
+      val expectedThomasVelocity = VelocityEntry("Thomas velocity",None,BigDecimal("11.08"),BigDecimal("55.40"))
+      val thomasVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).employeeVelocity("Thomas")
+      thomasVelocity must beEqualTo(expectedThomasVelocity)
+    }
+    "count velocity as average for sprints in which employee participated (with hours)" in {
+      val expectedMaryVelocity = VelocityEntry("Mary velocity",Some(BigDecimal("10.42")),BigDecimal("41.66"),BigDecimal("208.30"))
+      val maryVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18")))(InMemoryHoursPecisionConfiguration).
+        employeeVelocity("Mary")
+      maryVelocity must beEqualTo(expectedMaryVelocity)
+      val expectedThomasVelocity = VelocityEntry("Thomas velocity",Some(BigDecimal("11.08")),BigDecimal("44.32"),BigDecimal("221.60"))
+      val thomasVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18")))(InMemoryHoursPecisionConfiguration).
+        employeeVelocity("Thomas")
+      thomasVelocity must beEqualTo(expectedThomasVelocity)
+    }
+    "be the same for employee no matter what range statistics are using" in {
+      val maryVelocity1 = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).employeeVelocity("Mary")
+      val maryVelocity2 = Statistics(DateRange(LocalDate.parse("2015-07-01"), LocalDate.parse("2015-07-01"))).employeeVelocity("Mary")
+      maryVelocity1 must beEqualTo(maryVelocity2)
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-@(sprintName: String, storyPoints: Int, employeeCapacity: Seq[Tuple3[String,Int,Int]] )
+@(sprintName: String, storyPoints: Int, employeeCapacity: Seq[entities.EmployeeInSprint] )
 
 <link rel="import" href="@routes.Assets.at("bower_components/paper-slider/paper-slider.html")" />
 <link rel="import" href="@routes.Assets.at("bower_components/paper-input/paper-input.html")" />
@@ -12,8 +12,8 @@
 
     @for(entry <- employeeCapacity) {
         <div>
-            <div>@entry._1</div>
-            <div><paper-slider id="@entry._1" class="full-view" min="0" value="@entry._2" max="@entry._3" editable></paper-slider></div>
+            <div>@entry.name</div>
+            <div><paper-slider id="@entry.name" class="full-view" min="0" value="@entry.availability" max="@entry.maxAvailability" editable></paper-slider></div>
         </div>
     }
 </div>
