@@ -11,8 +11,8 @@ import scala.math.BigDecimal.RoundingMode
 object Statistics {
   private val Zero = BigDecimal("0.00")
 
+  def apply()(implicit config:Configuration): Statistics = new Statistics(DateRange(new LocalDate(2000,1,1), new LocalDate(1999,1,1)))(config)
   def apply(range:DateRange)(implicit config:Configuration): Statistics = new Statistics(range)(config)
-
 }
 
 class Statistics(range: DateRange)(implicit config: Configuration) {

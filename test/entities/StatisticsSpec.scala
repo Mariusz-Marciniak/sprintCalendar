@@ -47,7 +47,7 @@ class StatisticsSpec extends Specification {
   "totalUnitsInSprint" should {
     "return sum of availabilities in chosen sprint no matter what is statistics range" in {
       val sprintData: JsObject = conf.sprintsDao.loadSprintData("Sprint 1 2015-12-14::2016-01-01").get
-      Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2015-01-05"))).totalUnitsInSprint(sprintData) must beEqualTo(12)
+      Statistics().totalUnitsInSprint(sprintData) must beEqualTo(12)
     }
   }
 
@@ -129,7 +129,7 @@ class StatisticsSpec extends Specification {
     "be the same (expect label) as total velocity for all sprints" in {
       val expectedVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).totalVelocity
 
-      val globalVelocity = Statistics(DateRange(LocalDate.parse("2011-12-13"), LocalDate.parse("2012-12-31"))).globalVelocity
+      val globalVelocity = Statistics().globalVelocity
 
       globalVelocity.perHour must beEqualTo(expectedVelocity.perHour)
       globalVelocity.perDay must beEqualTo(expectedVelocity.perDay)
@@ -141,25 +141,25 @@ class StatisticsSpec extends Specification {
   "employeeVelocity" should {
     "count velocity as average for sprints in which employee participated" in {
       val expectedMaryVelocity = VelocityEntry("Mary velocity",None,BigDecimal("10.42"),BigDecimal("52.08"))
-      val maryVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).employeeVelocity("Mary")
+      val maryVelocity = Statistics().employeeVelocity("Mary")
       maryVelocity must beEqualTo(expectedMaryVelocity)
       val expectedThomasVelocity = VelocityEntry("Thomas velocity",None,BigDecimal("11.08"),BigDecimal("55.40"))
-      val thomasVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).employeeVelocity("Thomas")
+      val thomasVelocity = Statistics().employeeVelocity("Thomas")
       thomasVelocity must beEqualTo(expectedThomasVelocity)
     }
     "count velocity as average for sprints in which employee participated (with hours)" in {
       val expectedMaryVelocity = VelocityEntry("Mary velocity",Some(BigDecimal("10.42")),BigDecimal("41.66"),BigDecimal("208.30"))
-      val maryVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18")))(InMemoryHoursPecisionConfiguration).
+      val maryVelocity = Statistics()(InMemoryHoursPecisionConfiguration).
         employeeVelocity("Mary")
       maryVelocity must beEqualTo(expectedMaryVelocity)
       val expectedThomasVelocity = VelocityEntry("Thomas velocity",Some(BigDecimal("11.08")),BigDecimal("44.32"),BigDecimal("221.60"))
-      val thomasVelocity = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18")))(InMemoryHoursPecisionConfiguration).
+      val thomasVelocity = Statistics()(InMemoryHoursPecisionConfiguration).
         employeeVelocity("Thomas")
       thomasVelocity must beEqualTo(expectedThomasVelocity)
     }
     "be the same for employee no matter what range statistics are using" in {
-      val maryVelocity1 = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-18"))).employeeVelocity("Mary")
-      val maryVelocity2 = Statistics(DateRange(LocalDate.parse("2015-07-01"), LocalDate.parse("2015-07-01"))).employeeVelocity("Mary")
+      val maryVelocity1 = Statistics().employeeVelocity("Mary")
+      val maryVelocity2 = Statistics().employeeVelocity("Mary")
       maryVelocity1 must beEqualTo(maryVelocity2)
     }
   }

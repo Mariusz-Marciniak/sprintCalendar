@@ -9,11 +9,16 @@
     <core-icon-button class="inner-save-btn" id="saveSprintDataBtn" icon="save"><span>Save</span></core-icon-button>
 
     <paper-input id="storyPoints" label="Total amount of story point" value="@storyPoints" floatingLabel></paper-input>
+    <span id="sp-label">of <span id="possibleStoryPoints">0</span></span>
 
     @for(entry <- employeeCapacity) {
         <div>
             <div>@entry.name</div>
-            <div><paper-slider id="@entry.name" class="full-view" min="0" value="@entry.availability" max="@entry.maxAvailability" editable></paper-slider></div>
+            <div>
+                <paper-slider id="@entry.name" class="full-view" min="0" data-story-points="@entry.storyPointsPerUnit.toDouble"
+                              value="@entry.availability" max="@entry.maxAvailability" editable>
+                </paper-slider>
+            </div>
         </div>
     }
 </div>

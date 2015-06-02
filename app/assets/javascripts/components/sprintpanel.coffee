@@ -1,6 +1,5 @@
 root = exports ? this
 
-
 $("#saveSprintDataBtn").click ->
   $("#success-bar").hide()
   $("#error-bar").hide()
@@ -25,3 +24,14 @@ prepareData = () ->
   )
   sprintTxt += ']}'
   sprintTxt
+
+root.sc_sprintPanel =
+  calcStoryPoints: () ->
+    sum = 0
+    $("paper-slider").each(( index, component ) ->
+      sum += component.dataset.storyPoints * component.value
+    )
+    $("#possibleStoryPoints").html(Math.round(sum))
+
+$ ->
+  $("paper-slider").on("change", sc_sprintPanel.calcStoryPoints)

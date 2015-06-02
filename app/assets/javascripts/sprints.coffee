@@ -14,3 +14,8 @@ $ ->
 root.sc_sprints =
   refreshSprint : (data) ->
     $("#sprint-panel").html(data)
+    setTimeout ( =>
+      sc_sprintPanel.calcStoryPoints()
+    ), 500
+
+
