@@ -2,10 +2,13 @@ package controllers
 
 import com.github.nscala_time.time.Imports._
 import dao.SettingsDao
-import entities.{Statistics, EmployeeInSprint, DateRange, WorkingDays}
+import entities.{DateRange, EmployeeInSprint, Statistics, WorkingDays}
 import play.api.Routes
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
+
+import scala.util.{Try, Failure, Success}
+
 
 object Sprints extends Controller {
 
@@ -27,34 +30,47 @@ object Sprints extends Controller {
   }
 
   def sprintData(sprintId: String) = Action { implicit request =>
-    import entities.WorkingDays._
     val sprint = castToJsArray(settingsDao.loadSprints.getOrElse(JsArray())).findRow("label", sprintId)
     if (sprint.isDefined) {
-      val sprintData = sprintsDao.loadSprintData(sprintId).getOrElse(Json.obj())
+      val sprintDataOption = sprintsDao.loadSprintData(sprintId).toOption
       val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
       val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
       val workingDays = workingDaysWithoutHolidays(DateRange(fromDate,toDate))
-      val multiplier = hoursMultiplier
-      val stats = Statistics()
 
       val employeeCapacity = settingsDao.loadEmployeesNames map {
-        case employee => {
-          val maxAvailability = workingDays.filterEmployeeVacations(
-            vacationsFromJsArray(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
-          ).dates.size * multiplier
-          val velocity = stats.employeeVelocity(employee)
-          EmployeeInSprint(employee,availability(employee, sprintData, maxAvailability),maxAvailability, velocity.perHour.getOrElse(velocity.perDay))
-        }
+        case employee => calculateEmployeeCapacity(employee, workingDays, sprintDataOption)
       }
-      Ok(views.html.components.sprintpanel(sprintId, storyPoints(sprintData), employeeCapacity))
+      Ok(views.html.components.sprintpanel(sprintId, storyPoints(sprintDataOption), employeeCapacity))
     } else NotFound
   }
 
-  private def storyPoints(inSprint: JsValue) : Int = {
-    try {
-      castToJsNumber(inSprint \ "storyPoints").value.toInt
-    } catch {
-      case e:NumberFormatException => 0
+  private def calculateEmployeeCapacity(employee: String, workingDays: WorkingDays, sprintDataOption: Option[JsValue]): EmployeeInSprint = {
+    import entities.WorkingDays._
+
+    val maxAvailability = workingDays.filterEmployeeVacations(
+      vacationsFromJsArray(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
+    ).dates.size * hoursMultiplier
+    val velocity = Statistics().employeeVelocity(employee)
+    sprintDataOption match {
+      case Some(sprintData) =>
+        EmployeeInSprint(employee, availability(employee, sprintData, maxAvailability),maxAvailability, velocity.perHour.getOrElse(velocity.perDay))
+      case None =>
+        EmployeeInSprint(employee, maxAvailability, maxAvailability, velocity.perHour.getOrElse(velocity.perDay))
+    }
+
+  }
+
+
+  private def storyPoints(inSprint: Option[JsValue]) : Int = {
+    inSprint match {
+      case Some(sprintData) => {
+        try {
+          castToJsNumber(sprintData \ "storyPoints").value.toInt
+        } catch {
+          case e:NumberFormatException => 0
+        }
+      }
+      case None => 0
     }
   }
 
@@ -69,7 +85,7 @@ object Sprints extends Controller {
     }
   }
 
-  private def hoursMultiplier: Int = {
+  private lazy val hoursMultiplier: Int = {
     val settings = settingsDao.loadDayAndPrecision.getOrElse(SettingsDao.DefaultDaysAndPrecisionOptions)
     val precisionType = castToJsString(settings \ "precision" \ "type")
     if("hours".equals(precisionType.value))

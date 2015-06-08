@@ -1,8 +1,10 @@
 package entities
 
+import java.io.FileNotFoundException
+
 import com.github.nscala_time.time.Imports._
 import config.InMemoryConfiguration
-import dao.SettingsDao
+import dao.{SprintsDao, SettingsDao}
 import dao.memory.{InMemorySettingsDao, InMemorySprintsDao, InMemoryUserDefaultsDao, InMemoryVacationsDao}
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
@@ -65,6 +67,11 @@ class StatisticsSpec extends Specification {
   "calculateVelocities" should {
     "return empty sequence when no sprint in range" in {
       Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2015-12-31"))).calculateVelocities must be empty
+    }
+    "return no velocity stats when no sprint data is defined" in {
+      val stats = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-20")))(SprintWithoutDataConfiguration).calculateVelocities
+
+      stats must be empty
     }
     "return velocities for all sprints days precision" in {
       val expectedVelocities = List(
@@ -208,3 +215,16 @@ object InMemoryHoursPecisionConfiguration extends config.Configuration {
   )
 }
 
+object SprintWithoutDataConfiguration extends config.Configuration {
+  lazy val settingsDao = new InMemorySettingsDao
+  lazy val vacationsDao = new InMemoryVacationsDao
+  lazy val userDefaultsDao = new InMemoryUserDefaultsDao
+  lazy val sprintsDao = new SprintsDao {
+    override def saveSprintData(sprintIdentifier: String, sprintData: JsValue): Try[JsValue] = {
+      Success(sprintData)
+    }
+    override def loadSprintData(sprintIdentifier: String): Try[JsValue] = {
+      Failure(new FileNotFoundException())
+    }
+  }
+}
