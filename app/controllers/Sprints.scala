@@ -60,7 +60,6 @@ object Sprints extends Controller {
 
   }
 
-
   private def storyPoints(inSprint: Option[JsValue]) : Int = {
     inSprint match {
       case Some(sprintData) => {

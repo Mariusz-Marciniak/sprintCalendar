@@ -108,4 +108,17 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
 
 }
 
+/**
+ *
+ * @param name velocity name
+ * @param perHour is <ul><li>
+ *                  <code>Some(v)</code> if <code>settings.dayAndPrecision.precision.type</code> set to <code>hours</code>
+ *                  (<code>v</code> is calculated as: <code>storyPointsInSprint / sum(users availabilities)</code>)
+ *                </li>
+ *                <li><code>None</code> otherwise</li></ul>
+ * @param perDay is calculated as <ul><li><code>perHour * settings.dayAndPrecision.precision.perDay</code>
+ *               when <code>settings.dayAndPrecision.precision.type</code>
+ *               set to <code>hours</code></li><li><code>storyPointsInSprint / sum(users availabilities)</code> otherwise</li></ul>
+ * @param perWeek is calculated as <code>perDay * amountOfWorkDays from settings.dayAndPrecision.workdays</code>
+ */
 case class VelocityEntry(name: String, perHour: Option[BigDecimal], perDay: BigDecimal, perWeek: BigDecimal)
