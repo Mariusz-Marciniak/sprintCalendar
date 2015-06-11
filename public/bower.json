@@ -23,7 +23,8 @@
     "paper-radio-button": "Polymer/paper-radio-button#^0.5",
     "paper-slider": "Polymer/paper-slider#^0.5",
     "core-collapse": "Polymer/core-collapse#^0.5",
-    "paper-button": "Polymer/paper-button#^0.5"
+    "paper-button": "Polymer/paper-button#^0.5",
+    "paper-dropdown-menu": "Polymer/paper-dropdown-menu#^0.5"
   },
   "resolutions": {
     "webcomponentsjs": "~0.5.5"
