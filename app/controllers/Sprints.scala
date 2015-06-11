@@ -29,18 +29,39 @@ object Sprints extends Controller {
     ).as("text/javascript")
   }
 
+  def saveSprintData(sprintId: String) = Action(parse.json) { implicit request => {
+      sprintsDao.saveSprintData(sprintId, request.body)
+      loadSprintData(sprintId)
+    }
+  }
+
+  def mainPage = Action { implicit request => {
+      Ok(views.html.sprints())
+    }
+  }
+
+  def sprints = Action { implicit request => {
+      Ok(settingsDao.loadSprints.getOrElse(JsArray()))
+    }
+  }
+
   def sprintData(sprintId: String) = Action { implicit request =>
+    loadSprintData(sprintId)
+  }
+
+  private def loadSprintData(sprintId:String) = {
     val sprint = castToJsArray(settingsDao.loadSprints.getOrElse(JsArray())).findRow("label", sprintId)
     if (sprint.isDefined) {
       val sprintDataOption = sprintsDao.loadSprintData(sprintId).toOption
       val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
       val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
       val workingDays = workingDaysWithoutHolidays(DateRange(fromDate,toDate))
+      val confirmed = castToJsBoolean(sprintDataOption.get \ "confirmed").value
 
       val employeeCapacity = settingsDao.loadEmployeesNames map {
         case employee => calculateEmployeeCapacity(employee, workingDays, sprintDataOption)
       }
-      Ok(views.html.components.sprintpanel(sprintId, storyPoints(sprintDataOption), employeeCapacity))
+      Ok(views.html.components.sprintpanel(sprintId, confirmed, storyPoints(sprintDataOption), employeeCapacity))
     } else NotFound
   }
 
@@ -102,24 +123,6 @@ object Sprints extends Controller {
       holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),range)
     )
   }
-
-
-  def saveSprintData(sprintId: String) = Action(parse.json) { implicit request => {
-      sprintsDao.saveSprintData(sprintId, request.body)
-      Ok(views.html.sprints())
-    }
-  }
-
-  def mainPage = Action { implicit request => {
-      Ok(views.html.sprints())
-    }
-  }
-
-  def sprints = Action { implicit request => {
-      Ok(settingsDao.loadSprints.getOrElse(JsArray()))
-    }
-  }
-
 
   private def sprintsNames(): Seq[String] = {
     val sprints = settingsDao.loadSprints.getOrElse(JsArray())

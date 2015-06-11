@@ -17,6 +17,7 @@ class InMemorySprintsDao extends SprintsDao {
     ),
     "Sprint 2 2016-01-02::2016-01-18"->Json.obj(
       "storyPoints" -> 78,
+      "confirmed" -> true,
       "workload" -> Json.arr(
         Json.obj("employee"->"Mary", "availability"->8)
       )

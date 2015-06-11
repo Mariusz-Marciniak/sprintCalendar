@@ -1,20 +1,36 @@
 root = exports ? this
 
+
 $("#saveSprintDataBtn").click ->
+  saveSprintData(false)
+
+$("#confirmBtn").click ->
+  if(this.getAttribute("active")==null)
+    saveSprintData(false)
+  else
+    saveSprintData(true)
+
+saveSprintData = (confirmed) ->
   $("#success-bar").hide()
   $("#error-bar").hide()
+  sprint = $("#sprintNameLabel").html()
   $.ajax
-    url: sprintsJsRoutes.controllers.Sprints.saveSprintData($("#sprints-list").prop("selected")).url
+    url: sprintsJsRoutes.controllers.Sprints.saveSprintData(sprint).url
     contentType: "application/json"
     method: "POST"
     successMessage: "Data was successfully saved"
     errorMessage: "Save operation failed"
-    data: prepareData()
-    success: sc_main.dataPosted
+    data: prepareData(confirmed)
+    success: confirmAndRefreshSprintData
     error: sc_main.onError
 
-prepareData = () ->
+confirmAndRefreshSprintData = (data) ->
+  sc_main.dataPosted
+  sc_sprints.refreshSprint(data)
+
+prepareData = (confirmed) ->
   sprintTxt = '{ "storyPoints":'+$("#storyPoints").prop("value")
+  sprintTxt += ',"confirmed": '+confirmed
   sprintTxt += ',"workload": ['
   $.each($("paper-slider"),
     (index, component) ->
@@ -27,11 +43,13 @@ prepareData = () ->
 
 root.sc_sprintPanel =
   calcStoryPoints: () ->
-    sum = 0
-    $("paper-slider").each(( index, component ) ->
-      sum += component.dataset.storyPoints * component.value
-    )
-    $("#possibleStoryPoints").html(Math.round(sum))
+    possibleStoryPointsSelector = $("#possibleStoryPoints")
+    if(possibleStoryPointsSelector.length)
+      sum = 0
+      $("paper-slider").each(( index, component ) ->
+        sum += component.dataset.storyPoints * component.value
+      )
+      possibleStoryPointsSelector.html(Math.round(sum))
 
 $ ->
   $("paper-slider").on("change", sc_sprintPanel.calcStoryPoints)

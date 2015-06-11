@@ -49,7 +49,7 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
       val sprintData: JsObject = config.sprintsDao.loadSprintData(sprintName).get
       val unitsInSprint: BigDecimal = totalUnitsInSprint(sprintData)
       val storyPoints: BigDecimal = castToJsNumber(sprintData \ "storyPoints").value
-      if("hours".equals(castToJsString(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "type").value)) {
+      if("hours".equals(precisionType)) {
         val perHour = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
         val perDay = (perHour * castToJsNumber(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "perDay").value).setScale(2,RoundingMode.HALF_UP)
         val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
@@ -67,6 +67,8 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
   lazy val globalVelocity: VelocityEntry =
     avgVelocities(calculateVelocitiesFor(castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).map(v => v)), "Global velocity")
 
+  lazy val precisionType = castToJsString(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "type").value
+
   private def avgVelocities(velocities: Seq[VelocityEntry], label: String): VelocityEntry = {
     import Statistics.Zero
     if(velocities.size > 0) {
@@ -81,7 +83,10 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
         (velocities.map(_.perDay).sum / velocities.size).setScale(2, RoundingMode.HALF_UP),
         (velocities.map(_.perWeek).sum / velocities.size).setScale(2, RoundingMode.HALF_UP))
     } else {
-      VelocityEntry(label, None, Zero, Zero)
+      if("hours".equals(precisionType))
+        VelocityEntry(label, Some(Zero), Zero, Zero)
+      else
+        VelocityEntry(label, None, Zero, Zero)
     }
   }
 
@@ -89,13 +94,20 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
       castToJsArray(sprintData \ "workload").map(v => castToJsNumber(v \ "availability").value).sum
   }
 
+  def dataOfConfirmedSprint(sprintName: String) : Option[JsObject] = {
+    val sprintData = config.sprintsDao.loadSprintData(sprintName)
+    if(sprintData.isSuccess && castToJsBoolean(sprintData.get \ "confirmed").value)
+      Some(sprintData.get)
+    else
+      None
+  }
   def employeeVelocity(employeeName: String) : VelocityEntry ={
     avgVelocities(
       calculateVelocitiesFor(
         castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).filter(s => {
           val sprintName: String = castToJsString(s \ "label").value
-          val sprintDataOption = config.sprintsDao.loadSprintData(sprintName)
-          if(sprintDataOption.isSuccess) {
+          val sprintDataOption = dataOfConfirmedSprint(sprintName)
+          if(sprintDataOption.isDefined) {
             val workload: JsArray = sprintDataOption.get \ "workload"
             workload.findRow("employee", employeeName) match {
               case Some(row) => castToJsNumber(row \ "availability").value > 0

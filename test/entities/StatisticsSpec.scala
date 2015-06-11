@@ -146,27 +146,25 @@ class StatisticsSpec extends Specification {
   }
 
   "employeeVelocity" should {
-    "count velocity as average for sprints in which employee participated" in {
-      val expectedMaryVelocity = VelocityEntry("Mary velocity",None,BigDecimal("10.42"),BigDecimal("52.08"))
+    "count velocity as average for confirmed sprints in which employee participated" in {
+      val expectedMaryVelocity = VelocityEntry("Mary velocity",None,BigDecimal("9.75"),BigDecimal("48.75"))
       val maryVelocity = Statistics().employeeVelocity("Mary")
       maryVelocity must beEqualTo(expectedMaryVelocity)
-      val expectedThomasVelocity = VelocityEntry("Thomas velocity",None,BigDecimal("11.08"),BigDecimal("55.40"))
+      val expectedThomasVelocity = VelocityEntry("Thomas velocity",None,BigDecimal("0.00"),BigDecimal("0.00"))
       val thomasVelocity = Statistics().employeeVelocity("Thomas")
       thomasVelocity must beEqualTo(expectedThomasVelocity)
     }
-    "count velocity as average for sprints in which employee participated (with hours)" in {
-      val expectedMaryVelocity = VelocityEntry("Mary velocity",Some(BigDecimal("10.42")),BigDecimal("41.66"),BigDecimal("208.30"))
-      val maryVelocity = Statistics()(InMemoryHoursPecisionConfiguration).
-        employeeVelocity("Mary")
+    "count velocity as average for confirmed sprints in which employee participated (with hours)" in {
+      val expectedMaryVelocity = VelocityEntry("Mary velocity",Some(BigDecimal("9.75")),BigDecimal("39.00"),BigDecimal("195.00"))
+      val maryVelocity = Statistics()(InMemoryHoursPecisionConfiguration).employeeVelocity("Mary")
       maryVelocity must beEqualTo(expectedMaryVelocity)
-      val expectedThomasVelocity = VelocityEntry("Thomas velocity",Some(BigDecimal("11.08")),BigDecimal("44.32"),BigDecimal("221.60"))
-      val thomasVelocity = Statistics()(InMemoryHoursPecisionConfiguration).
-        employeeVelocity("Thomas")
+      val expectedThomasVelocity = VelocityEntry("Thomas velocity",Some(BigDecimal("0.00")),BigDecimal("0.00"),BigDecimal("0.00"))
+      val thomasVelocity = Statistics()(InMemoryHoursPecisionConfiguration).employeeVelocity("Thomas")
       thomasVelocity must beEqualTo(expectedThomasVelocity)
     }
     "be the same for employee no matter what range statistics are using" in {
       val maryVelocity1 = Statistics().employeeVelocity("Mary")
-      val maryVelocity2 = Statistics().employeeVelocity("Mary")
+      val maryVelocity2 = Statistics(DateRange(LocalDate.parse("2015-12-13"), LocalDate.parse("2016-01-04"))).employeeVelocity("Mary")
       maryVelocity1 must beEqualTo(maryVelocity2)
     }
   }

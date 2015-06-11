@@ -1,23 +1,39 @@
-@(sprintName: String, storyPoints: Int, employeeCapacity: Seq[entities.EmployeeInSprint] )
+@(sprintName: String, confirmed: Boolean, storyPoints: Int, employeeCapacity: Seq[entities.EmployeeInSprint] )
 
 <link rel="import" href="@routes.Assets.at("bower_components/paper-slider/paper-slider.html")" />
 <link rel="import" href="@routes.Assets.at("bower_components/paper-input/paper-input.html")" />
+<link rel="import" href="@routes.Assets.at("bower_components/paper-button/paper-button.html")" />
 <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/components/sprintpanel.css")" />
 <script src="@routes.Assets.at("javascripts/components/sprintpanel.js")" type="text/javascript"></script>
 
 <div class="container">
-    <h3>@sprintName</h3>
+    <h3 id="sprintNameLabel">@sprintName</h3>
+    <paper-button toggle
+        @if(confirmed) {
+            active
+        }
+    id="confirmBtn">Confirm</paper-button>
     <core-icon-button class="inner-save-btn" id="saveSprintDataBtn" icon="save"><span>Save</span></core-icon-button>
 
-    <paper-input id="storyPoints" label="Total amount of story point" value="@storyPoints" floatingLabel></paper-input>
-    <span id="sp-label">of <span id="possibleStoryPoints">0</span></span>
+    <paper-input id="storyPoints" label="Total amount of story point" value="@storyPoints" floatingLabel
+    @if(confirmed) {
+        disabled
+    }
+    ></paper-input>
+    @if(!confirmed) {
+        <span id="sp-label">of <span id="possibleStoryPoints">0</span></span>
+    }
 
     @for(entry <- employeeCapacity) {
         <div>
             <div>@entry.name</div>
             <div>
                 <paper-slider id="@entry.name" class="full-view" min="0" data-story-points="@entry.storyPointsPerUnit.toDouble"
-                              value="@entry.availability" max="@entry.maxAvailability" editable>
+                              value="@entry.availability" max="@entry.maxAvailability" editable
+                @if(confirmed) {
+                    disabled
+                }
+                >
                 </paper-slider>
             </div>
         </div>
