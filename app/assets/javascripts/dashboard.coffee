@@ -38,5 +38,5 @@ root.sc_dashboard =
       sc_main.showMessageBar($("#error-bar"), "End of timeline should occur after beginning")
       false
      else
-      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax().always(location.reload())
+      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax().done(location.reload())
       true

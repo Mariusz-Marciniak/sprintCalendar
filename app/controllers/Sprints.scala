@@ -56,7 +56,7 @@ object Sprints extends Controller {
       val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
       val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
       val workingDays = workingDaysWithoutHolidays(DateRange(fromDate,toDate))
-      val confirmed = castToJsBoolean(sprintDataOption.get \ "confirmed").value
+      val confirmed = castToJsBoolean(sprintDataOption.getOrElse(Json.obj("confirmed"->false)) \ "confirmed").value
 
       val employeeCapacity = settingsDao.loadEmployeesNames map {
         case employee => calculateEmployeeCapacity(employee, workingDays, sprintDataOption)
