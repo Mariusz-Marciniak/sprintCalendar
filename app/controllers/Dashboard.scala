@@ -1,15 +1,15 @@
 package controllers
 
-import entities.{DateRange, Statistics, UserDefaults}
+import entities._
 import play.api.Routes
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 
 import scala.collection.mutable.ArrayBuffer
-import config.JsonImplicits._
 
 object Dashboard extends Controller {
   import config.Configuration._
+  import config.JsonImplicits._
 
   private val settingsDao = configuration.settingsDao
   private val vacationsDao = configuration.vacationsDao
@@ -45,10 +45,21 @@ object Dashboard extends Controller {
     Ok(Json.toJson(timelines));
   }
 
+  private def employeeWorkdays(range: DateRange): Seq[Tuple2[String, Int]] = {
+    import entities.WorkingDays._
+    val workingDays = CustomUtil.workingDaysWithoutHolidays(range)
+    settingsDao.loadEmployeesNames.map { employee =>
+      (employee, workingDays.filterEmployeeVacations(
+        vacationsFromJsArray(vacationsDao.loadVacations(employee).getOrElse(JsArray()))
+      ).dates.size)
+    }
+  }
+
+
   def mainPage = Action {
     val defaults = loadDefaults()
     val range = DateRange(AppDateFormatter.parseLocalDate(defaults.timelineDateFrom), AppDateFormatter.parseLocalDate(defaults.timelineDateTo))
-    Ok(views.html.dashboard(Statistics(range)))
+    Ok(views.html.dashboard(Statistics(range), employeeWorkdays(range)))
   }
 
 }

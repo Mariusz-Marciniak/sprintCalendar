@@ -20,6 +20,22 @@ $ ->
     )
   )
 
+  $("#predef-ranges").on("core-select", (e) ->
+    alert(e.originalEvent.detail)
+    range = e.originalEvent.detail.item.innerText.split("::")
+    alert(e.originalEvent)
+    if(range.length > 1)
+      to = range[range.length-1].trim()
+      from = range[range.length-2]
+      alert(from)
+      alert(to)
+      if(from.length > 10)
+        from = from.substring(from.length-10)
+        $("#fromDate").attr("value",from)
+        $("#toDate").attr("value",to)
+        sc_dashboard.refreshTimeline()
+  )
+
 root.sc_dashboard =
   hintTimeout: undefined,
   refreshTimeline: () ->
@@ -38,5 +54,5 @@ root.sc_dashboard =
       sc_main.showMessageBar($("#error-bar"), "End of timeline should occur after beginning")
       false
      else
-      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax().done(location.reload())
+      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax().done(() -> location.reload())
       true

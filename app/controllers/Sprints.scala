@@ -7,8 +7,6 @@ import play.api.Routes
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 
-import scala.util.{Try, Failure, Success}
-
 
 object Sprints extends Controller {
 
@@ -55,7 +53,7 @@ object Sprints extends Controller {
       val sprintDataOption = sprintsDao.loadSprintData(sprintId).toOption
       val fromDate = LocalDate.parse(castToJsString(sprint.get \ "from").value)
       val toDate = LocalDate.parse(castToJsString(sprint.get \ "to").value)
-      val workingDays = workingDaysWithoutHolidays(DateRange(fromDate,toDate))
+      val workingDays = CustomUtil.workingDaysWithoutHolidays(DateRange(fromDate,toDate))
       val confirmed = castToJsBoolean(sprintDataOption.getOrElse(Json.obj("confirmed"->false)) \ "confirmed").value
 
       val employeeCapacity = settingsDao.loadEmployeesNames map {
@@ -114,15 +112,6 @@ object Sprints extends Controller {
       1
   }
 
-  def workingDaysWithoutHolidays(range: DateRange): WorkingDays = {
-    import entities.WorkingDays._
-    workdaysInRange(
-      range,
-      workdaysFromJsObject(settingsDao.loadDayAndPrecision.getOrElse(SettingsDao.DefaultDaysAndPrecisionOptions))
-    ) filterHolidays(
-      holidaysInRange(holidaysFromJsArray(settingsDao.loadHolidays.getOrElse(JsArray())),range)
-    )
-  }
 
   private def sprintsNames(): Seq[String] = {
     val sprints = settingsDao.loadSprints.getOrElse(JsArray())

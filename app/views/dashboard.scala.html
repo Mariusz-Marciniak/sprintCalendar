@@ -1,4 +1,4 @@
-@(stats: entities.Statistics)
+@(stats: entities.Statistics, workingDays:Seq[Tuple2[String, Int]])
 
 @main("Dashboard",0) {
     <link rel="import" href="@routes.Assets.at("bower_components/mm.webcomponents/timeline/timeline.html")" />
@@ -27,13 +27,13 @@
         Timeline range:
         <br/>
         <div class="flex-container">
-            <paper-dropdown-menu class="flex-item" label="Your favorite pastry">
+            <paper-dropdown-menu id="predef-ranges" class="flex-item" label="Predefined ranges">
                 <paper-dropdown class="dropdown">
                     <core-menu class="menu">
-                        <paper-item>Croissant</paper-item>
-                        <paper-item>Donut</paper-item>
-                        <paper-item>Financier</paper-item>
-                        <paper-item>Madeleine</paper-item>
+                        <paper-item>Custom</paper-item>
+                        @for(name <- stats.sprintsNames) {
+                            <paper-item>@name</paper-item>
+                        }
                     </core-menu>
                 </paper-dropdown>
             </paper-dropdown-menu>
@@ -47,7 +47,14 @@
         @for(name <- stats.sprintsNames) {
             &nbsp;&nbsp;@name <br/>
         }
-
+        <br/>
+        <table border="0">
+        @for(wdData <- workingDays) {
+            <tr>
+                <td> @wdData._1 </td><td> @wdData._2 </td>
+            </tr>
+        }
+        </table>
     }
     @components.velocitypanel(stats.globalVelocity)
 
