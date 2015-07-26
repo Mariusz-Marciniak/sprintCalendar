@@ -14,7 +14,7 @@ trait Configuration {
 
 object Configuration {
   val AppDateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
-  implicit val configuration = FileConfiguration
+  implicit val configuration = InMemoryConfiguration
 }
 
 object InMemoryConfiguration extends Configuration {

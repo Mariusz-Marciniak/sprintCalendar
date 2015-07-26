@@ -27,16 +27,6 @@
         Timeline range:
         <br/>
         <div class="flex-container">
-            <paper-dropdown-menu id="predef-ranges" class="flex-item" label="Predefined ranges">
-                <paper-dropdown class="dropdown">
-                    <core-menu class="menu">
-                        <paper-item>Custom</paper-item>
-                        @for(name <- stats.sprintsNames) {
-                            <paper-item>@name</paper-item>
-                        }
-                    </core-menu>
-                </paper-dropdown>
-            </paper-dropdown-menu>
             <paper-input id="fromDate" class="flex-item" label="from date" value="@stats.fromDate" floatingLabel></paper-input>
             <paper-input id="toDate" class="flex-item" label="to date" value="@stats.toDate" floatingLabel></paper-input>
             <paper-icon-button icon="refresh" onclick="sc_dashboard.refreshTimeline();"></paper-icon-button>

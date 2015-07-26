@@ -51,7 +51,8 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
       val storyPoints: BigDecimal = castToJsNumber(sprintData \ "storyPoints").value
       if("hours".equals(precisionType)) {
         val perHour = (storyPoints / unitsInSprint).setScale(2,RoundingMode.HALF_UP)
-        val perDay = (perHour * castToJsNumber(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "perDay").value).setScale(2,RoundingMode.HALF_UP)
+        val defaults = config.settingsDao.loadDayAndPrecision.getOrElse(dao.SettingsDao.DefaultDaysAndPrecisionOptions)
+        val perDay = (perHour * castToJsNumber(defaults \ "precision" \ "perDay").value).setScale(2,RoundingMode.HALF_UP)
         val perWeek = (perDay * BigDecimal(amountOfWorkdaysInWeek)).setScale(2,RoundingMode.HALF_UP)
         Some(VelocityEntry(sprintName, Some(perHour), perDay, perWeek))
       } else {
@@ -67,7 +68,10 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
   lazy val globalVelocity: VelocityEntry =
     avgVelocities(calculateVelocitiesFor(castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).map(v => v)), "Global velocity")
 
-  lazy val precisionType = castToJsString(config.settingsDao.loadDayAndPrecision.get \ "precision" \ "type").value
+  lazy val precisionType = {
+    val defaults = config.settingsDao.loadDayAndPrecision.getOrElse(dao.SettingsDao.DefaultDaysAndPrecisionOptions)
+    castToJsString(defaults \ "precision" \ "type").value
+  }
 
   private def avgVelocities(velocities: Seq[VelocityEntry], label: String): VelocityEntry = {
     import Statistics.Zero
