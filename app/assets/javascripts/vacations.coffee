@@ -56,11 +56,24 @@ root.vacation_editbox =
             "End of holiday should occur after beginning"
           else
             null
+    else if(datePattern.exec(txt))
+      singleDay = new Date(txt.trim())
+      if(isNaN(singleDay.getTime()))
+        "Invalid date"
+      else
+        null
     else
       "Please enter holiday period yyyy-mm-dd::yyyy-mm-dd"
+
   convert : (txt) ->
     datesPattern = /\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
-    datePattern = /\d{4}-\d{1,2}-\d{1,2}\s*/g
     datesPart = datesPattern.exec(txt)
-    dates = datesPart[0].split("::")
-    JSON.parse('{"label":"'+txt+'","accepted":false,"from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
+    if(datesPart)
+      dates = datesParts[0].split("::")
+      JSON.parse('{"label":"'+txt+'","accepted":false,"from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
+    else
+      datePattern = /\d{4}-\d{1,2}-\d{1,2}/
+      date = datePattern.exec(txt)
+      label = date+"::"+date
+      JSON.parse('{"label":"'+label+'","accepted":false,"from":"'+date+'","to":"'+date+'"}')
+
