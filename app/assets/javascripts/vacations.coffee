@@ -69,7 +69,7 @@ root.vacation_editbox =
     datesPattern = /\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}\s*$/
     datesPart = datesPattern.exec(txt)
     if(datesPart)
-      dates = datesParts[0].split("::")
+      dates = datesPart[0].split("::")
       JSON.parse('{"label":"'+txt+'","accepted":false,"from":"'+dates[0]+'","to":"'+dates[1].trim()+'"}')
     else
       datePattern = /\d{4}-\d{1,2}-\d{1,2}/
