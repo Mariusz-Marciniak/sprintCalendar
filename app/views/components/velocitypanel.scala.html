@@ -1,8 +1,12 @@
 @(entry: entities.VelocityEntry)
 
-@components.collapse(entry.name.replaceAll("[\\s\\.:-]","").replaceAll("^\\d+","").toLowerCase, entry.name) {
-    Per hour: @entry.perHour
-    Per day: @entry.perDay
-    Per week: @entry.perWeek
-}
-
+<table>
+    <thead>
+        <tr><th colspan="2">@entry.name</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>&nbsp;per hour:</td><td>@entry.perHour</td></tr>
+        <tr><td>&nbsp;per day:</td><td>@entry.perDay</td></tr>
+        <tr><td>&nbsp;per week:</td><td>@entry.perWeek</td></tr>
+    </tbody>
+</table>

@@ -46,10 +46,12 @@
         }
         </table>
     }
-    @components.velocitypanel(stats.globalVelocity)
-
-    @components.velocitypanel(stats.totalVelocity)
-
-    @stats.calculateVelocities.map(components.velocitypanel(_))
+    @components.collapse("velocities", "Velocities") {
+        <div horizontal layout justified wrap >
+            @components.velocitypanel(stats.globalVelocity)
+            @components.velocitypanel(stats.totalVelocity)
+            @stats.calculateVelocities.map(components.velocitypanel(_))
+        </div>
+    }
 }
 
