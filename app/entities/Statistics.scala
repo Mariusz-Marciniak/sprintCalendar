@@ -105,7 +105,8 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
     else
       None
   }
-  def employeeVelocity(employeeName: String) : VelocityEntry ={
+
+  def employeeVelocity(employeeName: String) : VelocityEntry = {
     avgVelocities(
       calculateVelocitiesFor(
         castToJsArray(config.settingsDao.loadSprints.getOrElse(JsArray())).filter(s => {
@@ -121,6 +122,8 @@ class Statistics(range: DateRange)(implicit config: Configuration) {
         })
       ), s"$employeeName velocity")
   }
+
+  def employeesVelocities= config.settingsDao.loadEmployeesNames map (employeeVelocity(_))
 
 }
 
