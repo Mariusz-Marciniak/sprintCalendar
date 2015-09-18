@@ -11,15 +11,15 @@ class InMemorySprintsDao extends SprintsDao {
     "Sprint 1 2015-12-14::2016-01-01"->Json.obj(
       "storyPoints" -> 133,
       "workload" -> Json.arr(
-        Json.obj("employee"->"Thomas", "availability"->10),
-        Json.obj("employee"->"Mary", "availability"->2)
+        Json.obj("employee"->"Thomas", "availability"->10, "maxAvailability"->18),
+        Json.obj("employee"->"Mary", "availability"->2, "maxAvailability"->6)
       )
     ),
     "Sprint 2 2016-01-02::2016-01-18"->Json.obj(
       "storyPoints" -> 78,
       "confirmed" -> true,
       "workload" -> Json.arr(
-        Json.obj("employee"->"Mary", "availability"->8)
+        Json.obj("employee"->"Mary", "availability"->8, "maxAvailability"->12)
       )
     )
   )

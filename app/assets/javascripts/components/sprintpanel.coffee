@@ -6,8 +6,6 @@ $("#saveSprintDataBtn").click ->
 
 $("#confirmBtn").click ->
   if(this.getAttribute("active")==null)
-    saveSprintData(false)
-  else
     saveSprintData(true)
 
 saveSprintData = (confirmed) ->
@@ -36,7 +34,10 @@ prepareData = (confirmed) ->
     (index, component) ->
       if(index > 0)
         sprintTxt += ','
-      sprintTxt += '{"employee":"'+sc_main.escape(null, component.getAttribute("id"))+'","availability":'+component.value+'}'
+      sprintTxt += '{"employee":"'+sc_main.escape(null, component.getAttribute("id"))+'","availability":'+component.value
+      if(confirmed)
+        sprintTxt += ', "maxAvailability":'+component.max
+      sprintTxt += '}'
   )
   sprintTxt += ']}'
   sprintTxt

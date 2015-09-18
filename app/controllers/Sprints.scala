@@ -56,11 +56,33 @@ object Sprints extends Controller {
       val workingDays = CustomUtil.workingDaysWithoutHolidays(DateRange(fromDate,toDate))
       val confirmed = castToJsBoolean(sprintDataOption.getOrElse(Json.obj("confirmed"->false)) \ "confirmed").value
 
-      val employeeCapacity = settingsDao.loadEmployeesNames map {
-        case employee => calculateEmployeeCapacity(employee, workingDays, sprintDataOption)
+      if(confirmed) {
+        val employeeCapacity = readEmployeesCapacities(sprintDataOption)
+        Ok(views.html.components.sprintpanel(sprintId, confirmed, storyPoints(sprintDataOption), employeeCapacity))
+      } else {
+        val employeeCapacity = settingsDao.loadEmployeesNames map {
+          case employee => calculateEmployeeCapacity(employee, workingDays, sprintDataOption)
+        }
+        Ok(views.html.components.sprintpanel(sprintId, confirmed, storyPoints(sprintDataOption), employeeCapacity))
       }
-      Ok(views.html.components.sprintpanel(sprintId, confirmed, storyPoints(sprintDataOption), employeeCapacity))
     } else NotFound
+  }
+
+  private def readEmployeesCapacities(sprintDataOption: Option[JsValue]):Seq[EmployeeInSprint] = {
+    def read(entries: JsArray) :Seq[EmployeeInSprint] = {
+      entries map {case v =>
+        EmployeeInSprint(
+          castToJsString(v \ "employee").value,
+          castToJsNumber(v \ "availability").value.intValue(),
+          castToJsNumber(v \ "maxAvailability").value.intValue(),
+          0)
+      }
+    }
+
+    sprintDataOption match {
+      case Some(sprintData) => read(castToJsArray(sprintData \ "workload"))
+      case None => Seq()
+    }
   }
 
   private def calculateEmployeeCapacity(employee: String, workingDays: WorkingDays, sprintDataOption: Option[JsValue]): EmployeeInSprint = {
