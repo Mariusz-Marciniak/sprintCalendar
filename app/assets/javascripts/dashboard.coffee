@@ -25,18 +25,19 @@ root.sc_dashboard =
   refreshTimeline: () ->
     strFrom = $('#fromDate').prop('value')
     strTo = $('#toDate').prop('value')
-    dateFrom = new Date(strFrom)
-    dateTo = new Date(strTo)
 
-    if(isNaN(dateFrom.getTime()))
+    if(!moment(strFrom, "YYYY-MM-DD", true).isValid()) 
       sc_main.showMessageBar($("#error-bar"), "Invalid date - start of timeline range")
       false
-    else if(isNaN(dateTo.getTime()))
+    else if(!moment(strTo, "YYYY-MM-DD", true).isValid()) 
       sc_main.showMessageBar($("#error-bar"), "Invalid date - end of timeline range")
       false
-    else if(dateFrom >= dateTo)
-      sc_main.showMessageBar($("#error-bar"), "End of timeline should occur after beginning")
-      false
-     else
-      dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax().done(() -> location.reload())
-      true
+    else 
+      dateFrom = new Date(strFrom)
+      dateTo = new Date(strTo)
+      if(dateFrom >= dateTo)
+        sc_main.showMessageBar($("#error-bar"), "End of timeline should occur after beginning")
+        false
+      else
+        dashboardJsRoutes.controllers.Dashboard.saveDefaults(strFrom, strTo).ajax().done(() -> location.reload())
+        true

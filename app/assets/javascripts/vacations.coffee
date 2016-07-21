@@ -43,25 +43,25 @@ root.vacation_editbox =
     if(pattern.exec(txt))
       dates = txt.match(datePattern)
       dateStr = dates[dates.length-2]
-      dateFrom = new Date(dateStr)
-      if(isNaN(dateFrom.getTime()))
-        "Invalid date - start of holiday"
-      else
-        dateStr = dates[dates.length-1]
-        dateTo = new Date(dateStr.trim())
-        if(isNaN(dateTo.getTime()))
-          "Invalid date - end of holiday"
-        else
+      if(moment(dateStr, "YYYY-MM-DD", true).isValid())
+        dateFrom = new Date(dateStr)
+        dateStr = dates[dates.length-1].trim()
+        if(moment(dateStr, "YYYY-MM-DD", true).isValid())
+          dateTo = new Date(dateStr)
           if(dateFrom > dateTo)
             "End of holiday should occur after beginning"
           else
             null
+        else
+          "Invalid date - end of holiday"
+      else
+        "Invalid date - start of holiday"
     else if(datePattern.exec(txt))
       singleDay = new Date(txt.trim())
-      if(isNaN(singleDay.getTime()))
-        "Invalid date"
-      else
+      if(moment(txt, "YYYY-MM-DD", true).isValid())
         null
+      else
+        "Invalid date"
     else
       "Please enter holiday period yyyy-mm-dd::yyyy-mm-dd"
 

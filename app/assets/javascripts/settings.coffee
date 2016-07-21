@@ -94,11 +94,11 @@ root.holiday_editbox =
       if(dateStr.length < 6)
         # convert to date to verify if data is correct, 2012 is leap year
         dateStr = '2012-'+dateStr
-      date = new Date(dateStr)
-      if(isNaN(date.getTime()))
-        "Invalid date"
-      else
+      if(moment(dateStr, "YYYY-MM-DD", true).isValid())
+        date = new Date(dateStr)
         null
+      else
+        "Invalid date"
     else
       "Please enter holiday name followed by date yyyy-mm-dd or mm-dd (for each year)"
   convert : (txt) ->
@@ -116,21 +116,21 @@ root.sprint_editbox =
     if(pattern.exec(txt))
       dates = txt.match(datePattern)
       dateStr = dates[dates.length-2]
-      dateFrom = new Date(dateStr)
-      if(isNaN(dateFrom.getTime()))
-        "Invalid date - start of sprint"
-      else
+      if(moment(dateStr, "YYYY-MM-DD", true).isValid())
+        dateFrom = new Date(dateStr)
         dateStr = dates[dates.length-1]
-        dateTo = new Date(dateStr.trim())
-        if(isNaN(dateTo.getTime()))
-          "Invalid date - end of sprint"
-        else
+        if(moment(dateStr, "YYYY-MM-DD", true).isValid())
+          dateTo = new Date(dateStr.trim())
           if(dateFrom >= dateTo)
             "End of sprint should occur after beginning"
           else
             null
-    else
-      "Please enter sprint name followed by period yyyy-mm-dd::yyyy-mm-dd"
+         else
+           "Invalid date - end of sprint"
+       else
+         "Invalid date - start of sprint"
+     else
+       "Please enter sprint name followed by period yyyy-mm-dd::yyyy-mm-dd"
   convert : (txt) ->
     txt = txt.trim()
     datesPattern = /\d{4}-\d{1,2}-\d{1,2}::\d{4}-\d{1,2}-\d{1,2}$/
